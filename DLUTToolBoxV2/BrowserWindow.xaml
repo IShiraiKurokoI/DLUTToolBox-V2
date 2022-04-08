@@ -1,0 +1,25 @@
+﻿<Window xmlns:Wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"  x:Class="DLUTToolBox_V2.BrowserWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DLUTToolBox_V2"
+        mc:Ignorable="d"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
+        xmlns:controls="https://handyorg.github.io/handycontrol"
+        Title="BrowserWindow" Height="720" Width="1280" WindowStartupLocation="CenterScreen" Closing="Window_Closing" >
+    <Grid>
+        <Wpf:WebView2 x:Name="Web" CoreWebView2InitializationCompleted="Web_CoreWebView2InitializationCompleted" NavigationCompleted="Web_NavigationCompleted" Visibility="Hidden"/>
+        <Canvas>
+            <Canvas.Background>
+                <SolidColorBrush Opacity="0.7" Color="AliceBlue"></SolidColorBrush>
+            </Canvas.Background>
+        </Canvas>
+        <DockPanel>
+            <Grid>
+                <Label x:Name="Browser_Background" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="26" Content="&#13;&#13;&#13;加载中，请稍后" BorderThickness="0" Background="Transparent"/>
+                <hc:LoadingCircle VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="LoadingCircle"/>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>

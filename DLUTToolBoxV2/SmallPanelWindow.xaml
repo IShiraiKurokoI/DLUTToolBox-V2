@@ -1,0 +1,76 @@
+﻿<Window x:Class="DLUTToolBox_V2.SmallPanelWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DLUTToolBox_V2"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
+        xmlns:controls="https://handyorg.github.io/handycontrol"
+        mc:Ignorable="d"
+        Title="SmallPanelWindow" Height="630" Width="1200" MinWidth="1200" MinHeight="630" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+    <Grid>
+        <Canvas x:Name="BackgroundBlur" Visibility="Visible">
+            <Canvas.Background>
+                <SolidColorBrush Opacity="0.7" Color="AliceBlue"/>
+            </Canvas.Background>
+        </Canvas>
+        <DockPanel x:Name="Folderbg" Visibility="Hidden">
+            <Viewbox Width="1200" Height="600" Stretch="Uniform">
+                <DockPanel DockPanel.Dock="Left"  Width="1200" Height="600">
+                    <DockPanel Width="220" DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Left">
+                        <Button Content="应用" FontSize="24" DockPanel.Dock="Top" Width="180" Height="100" x:Name="Apply" Click="Apply_Click"/>
+                        <Button Content="重置" FontSize="24" DockPanel.Dock="Top" Width="180" Height="100" Margin="0,60,0,0" x:Name="Reset" Click="Reset_Click"/>
+                    </DockPanel>
+                    <Label Content="文件夹背景设置：" DockPanel.Dock="Top" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Background="Transparent"/>
+                    <DockPanel DockPanel.Dock="Top" LastChildFill="False" Width="960">
+                        <DockPanel Margin="10" DockPanel.Dock="Left">
+                            <Label Content="小图标视图：" DockPanel.Dock="Top" BorderThickness="0" FontSize="20"/>
+                            <hc:ImageSelector DockPanel.Dock="Top" Width="300" Height="200" x:Name="pictureBox1" ImageSelected="pictureBox1_ImageSelected" Filter="真正的PNG图像文件(*.png)|*.png" Background="Transparent"/>
+                        </DockPanel>
+                        <DockPanel Margin="10" DockPanel.Dock="Left">
+                            <Label Content="列表视图：" DockPanel.Dock="Top" BorderThickness="0" FontSize="20"/>
+                            <hc:ImageSelector DockPanel.Dock="Top" Width="300" Height="200" x:Name="pictureBox2" ImageSelected="pictureBox2_ImageSelected" Filter="真正的PNG图像文件(*.png)|*.png" Background="Transparent"/>
+                        </DockPanel>
+                        <DockPanel Margin="10" DockPanel.Dock="Left">
+                            <Label Content="平铺视图：" DockPanel.Dock="Top" BorderThickness="0" FontSize="20"/>
+                            <hc:ImageSelector DockPanel.Dock="Top" Width="300" Height="200" x:Name="pictureBox3" ImageSelected="pictureBox3_ImageSelected" Filter="真正的PNG图像文件(*.png)|*.png" Background="Transparent"/>
+                        </DockPanel>
+                    </DockPanel>
+                    <DockPanel DockPanel.Dock="Top" LastChildFill="False" Width="960">
+                        <DockPanel Margin="10" DockPanel.Dock="Left" >
+                            <Label Content="中大图标视图：" DockPanel.Dock="Top" BorderThickness="0" FontSize="20"/>
+                            <hc:ImageSelector DockPanel.Dock="Top" Width="300" Height="200" x:Name="pictureBox4" ImageSelected="pictureBox4_ImageSelected" Filter="真正的PNG图像文件(*.png)|*.png" Background="Transparent"/>
+                        </DockPanel>
+                        <DockPanel Margin="10" DockPanel.Dock="Left">
+                            <Label Content="详细视图：" DockPanel.Dock="Top" BorderThickness="0" FontSize="20"/>
+                            <hc:ImageSelector DockPanel.Dock="Top" Width="300" Height="200"  x:Name="pictureBox5" ImageSelected="pictureBox5_ImageSelected" Filter="真正的PNG图像文件(*.png)|*.png" Background="Transparent"/>
+                        </DockPanel>
+                        <DockPanel Margin="10" DockPanel.Dock="Left">
+                            <Label Content="内容视图：" DockPanel.Dock="Top" BorderThickness="0" FontSize="20"/>
+                            <hc:ImageSelector DockPanel.Dock="Top" Width="300" Height="200"  x:Name="pictureBox6" ImageSelected="pictureBox6_ImageSelected" Filter="真正的PNG图像文件(*.png)|*.png" Background="Transparent"/>
+                        </DockPanel>
+                    </DockPanel>
+                </DockPanel>
+            </Viewbox>
+        </DockPanel>
+        <DockPanel x:Name="Adobe" Visibility="Hidden">
+            <DockPanel DockPanel.Dock="Left">
+                <Label Content="Adobe安装指引：" DockPanel.Dock="Top" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Margin="20" Background="Transparent"/>
+                <Label Content="方法1:先下载Creative Cloud，再运行激活软件" DockPanel.Dock="Top" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Margin="20" Background="Transparent"/>
+                <DockPanel Width="500" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" DockPanel.Dock="Top">
+                    <Button Content="Creative Cloud官网下载" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="250" Height="50" FontSize="20"  Margin="30,0,0,0" x:Name="CreativeCloud" Click="CreativeCloud_Click"/>
+                    <Button Content="激活软件下载" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="150" Height="50" FontSize="20"  Margin="30,0,0,0" x:Name="Genp" Click="Genp_Click"/>
+                </DockPanel>
+                <Label Content="方法2:直接下载绿色大师版安装" DockPanel.Dock="Top" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Margin="20" Background="Transparent"/>
+                <Button Content="绿色版下载" DockPanel.Dock="Top" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="150" Height="50" FontSize="20"  Margin="30,0,0,0" x:Name="Green" Click="Green_Click"/>
+                <Label Content="方法3:使用学校提供的镜像和激活方式下载安装" DockPanel.Dock="Top" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Margin="20" Background="Transparent"/>
+                <Button Content="学校镜像下载" DockPanel.Dock="Top" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="150" Height="50" FontSize="20"  Margin="30,0,0,0" x:Name="MS" Click="MS_Click"/>
+            </DockPanel>
+            <DockPanel DockPanel.Dock="Left">
+                <Label Content="激活软件使用：" DockPanel.Dock="Top" Width="200" HorizontalAlignment="Left" Margin="0,50,0,-100" FontSize="20" BorderThickness="0" Background="Transparent" HorizontalContentAlignment="Left"/>
+                <Image Source="/DlUTToolBoxV2;component/Resources/Step1.png" Width="360"/>
+                <Image Source="/DlUTToolBoxV2;component/Resources/Step2.png"/>
+            </DockPanel>
+        </DockPanel>
+    </Grid>
+</Window>

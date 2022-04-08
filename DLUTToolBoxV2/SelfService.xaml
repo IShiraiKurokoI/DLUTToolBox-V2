@@ -1,0 +1,25 @@
+﻿<Window xmlns:Wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"  x:Class="DLUTToolBox_V2.SelfService"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DLUTToolBox_V2"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
+        xmlns:controls="https://handyorg.github.io/handycontrol"
+        mc:Ignorable="d"
+        Title="开发区校区校园网自服务" Height="720" Width="1280" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Canvas x:Name="BackgroundBlur" Visibility="Hidden">
+            <Canvas.Background>
+                <SolidColorBrush Opacity="0.7" Color="AliceBlue"/>
+            </Canvas.Background>
+        </Canvas>
+        <DockPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="300" Panel.ZIndex="-10">
+            <Image DockPanel.Dock="Top" x:Name="CAPTCHA"/>
+            <Viewbox Width="300">
+                <controls:PinBox Length="4" Completed="PinBox_Completed" x:Name="CAPTCHABox" DockPanel.Dock="Top" Width="160"/>
+            </Viewbox>
+        </DockPanel>
+        <Wpf:WebView2 Source="http://172.20.20.1:8800/" x:Name="Web" NavigationCompleted="Web_NavigationCompleted" CoreWebView2InitializationCompleted="Web_CoreWebView2InitializationCompleted" WebMessageReceived="Web_WebMessageReceived" Visibility="Visible" VerticalAlignment="Top" Height="0"/>
+    </Grid>
+</Window>
