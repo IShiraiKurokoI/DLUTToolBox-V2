@@ -66,7 +66,7 @@ namespace DLUTToolBox_V2
         {
             Task.Run(() =>
             {
-                prefix();
+                //prefix();
                 EDA();
                 LingShui();
             });
@@ -195,7 +195,14 @@ namespace DLUTToolBox_V2
             }
             else
             {
-                Growl.FatalGlobal("⚠⚠连接失败⚠⚠\n" + html);
+                if (html.IndexOf("please") == -1 && html.IndexOf("nline") == -1)
+                {
+                    Growl.FatalGlobal("⚠⚠连接失败⚠⚠\n" + html);
+                }
+                else
+                {
+                    loadinfo();
+                }
                 Thread.Sleep(100000);
                 System.Environment.Exit(0);
             }
@@ -234,6 +241,9 @@ namespace DLUTToolBox_V2
             else
             {
                 Growl.FatalGlobal("配置文件丢失!\n" + System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName.Replace("DLUTToolBoxV2.exe", "Network.config"));
+                Thread.Sleep(3000);
+                Growl.ClearGlobal();
+                return;
             }
             string Uid = Paths[0];
             string NetworkPassword = Paths[1];
@@ -244,7 +254,7 @@ namespace DLUTToolBox_V2
                 re = re.Split(new string[] { Properties.Resources.Split }, StringSplitOptions.None)[1].Split(new string[] { "</td>" }, StringSplitOptions.None)[0];
                 Console.WriteLine(re);
                 html = re;
-                if (re.IndexOf("please") == -1)
+                if (re.IndexOf("please") == -1&&re.IndexOf("nline")==-1)
                 {
                     Growl.FatalGlobal(re);
                 }
@@ -292,9 +302,10 @@ namespace DLUTToolBox_V2
             strre = p1.StandardOutput.ReadToEnd();
             p1.WaitForExit();
             p1.Close();
-            if (strre.Length > 1000)
+            if (strre.Length < 1000)
             {
                 loadinfo();
+                Growl.ClearGlobal();
                 Growl.SuccessGlobal("连接成功\n您已正常连接互联网\n" + info + "\n登录模块自动退出");
                 Thread.Sleep(4000);
                 System.Environment.Exit(0);
@@ -304,15 +315,15 @@ namespace DLUTToolBox_V2
                 count++;
                 if (count == 1)
                 {
-                    Growl.FatalGlobal("⚠⚠连接失败⚠⚠\n即将自动重试，最大次数5次\n连接冷却：3秒");
+                    Growl.FatalGlobal("⚠⚠连接失败⚠⚠\n剩余尝试次数"+(5-count)+"次\n连接冷却：4秒");
+                    Thread.Sleep(4000);
+                    EDA();
                 }
                 else if (count == 5)
                 {
                     checkerror();
                     System.Environment.Exit(0);
                 }
-                Thread.Sleep(3000);
-                EDA();
             }
         }
         void netcheck_LS()//检查联网状态
