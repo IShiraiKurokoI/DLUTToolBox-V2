@@ -66,9 +66,9 @@ namespace DLUTToolBox_V2
         {
             Task.Run(() =>
             {
-                //prefix();
+                prefix();
                 EDA();
-                LingShui();
+                //LingShui();
             });
         }
 

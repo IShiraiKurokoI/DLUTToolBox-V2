@@ -56,10 +56,6 @@ namespace DLUTToolBox_V2
             SettingsInitializer();
             SetBackgroundImage();
             AutoLoginChecker();
-            if(Properties.Settings.Default.DoAutoUpdate==true)
-            {
-                checkforupdate();
-            }
             FetchColorFromSystem();
             SettingsChecker();
         }
@@ -112,7 +108,11 @@ namespace DLUTToolBox_V2
                     Overview_NetworkInfo.Content += "\n校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow_2(data[0]) + "\nIPV4地址:" + data[5] + "\n网卡MAC地址:\n" + data[3];
                     NetWork_NetworkInfo.Content += "\n校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow(data[0]) + "\nIPV4地址:" + data[5] + "\n网卡MAC地址:" + data[3];
                     netload = true;
-                    if(ReConnect==true)
+                    if (Properties.Settings.Default.DoAutoUpdate == true)
+                    {
+                        checkforupdate();
+                    }
+                    if (ReConnect==true)
                     {
                         Growl.SuccessGlobal("登陆成功！\n校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow(data[0]) + "\nIPV4地址:" + data[5] + "\n网卡MAC地址:" + data[3]);
                     }
@@ -1083,7 +1083,25 @@ namespace DLUTToolBox_V2
 
         private void WeatherBar_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
         {
-            WeatherHandle();
+            if (WeatherBar.Source.AbsoluteUri.IndexOf("172.20.20.1")!=-1)
+            {
+                Task.Run(() =>
+                {
+                    ReConnect = true;
+                    manualconnect();
+                });
+                netstatusload();
+                ClassTable.Height = 0;
+                TableCirlcle.Visibility = Visibility.Visible;
+                WeatherBar.Source = new Uri("http://www.weather.com.cn/");
+                ClassTable.Source = new Uri("https://api.m.dlut.edu.cn/login?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2fcourseschedule&response_type=code");
+                Eleinfo.Source = new Uri("https://api.m.dlut.edu.cn/oauth/authorize?client_id=19b32196decf419a&redirect_uri=https%3A%2F%2Fcard.m.dlut.edu.cn%2Fhomerj%2FopenRjOAuthPage&response_type=code&scope=base_api&state=weishao");
+                WorkSpace_Web.Source = new Uri("https://sso.dlut.edu.cn/cas/login?service=https%3A%2F%2Fehall.dlut.edu.cn%2Ffp%2Fview%3Fm%3Dfp#act=fp/formHome");
+            }
+            else
+            {
+                WeatherHandle();
+            }
         }
 
         async Task WeatherHandle()
@@ -1330,7 +1348,7 @@ namespace DLUTToolBox_V2
             try
             {
                 re = re.Split(new string[] { Properties.Resources.Split }, StringSplitOptions.None)[1].Split(new string[] { "</td>" }, StringSplitOptions.None)[0];
-                if (re.IndexOf("please") == -1)
+                if (re.IndexOf("please") == -1&&re.IndexOf("online")==-1)
                 {
                     Growl.InfoGlobal(re);
                 }
