@@ -73,7 +73,7 @@ namespace DLUTToolBox_V2
         }
 
         string info;
-        async Task prefix()
+        void prefix()
         {
             string checkcommand = "curl --connect-timeout 3 39.156.66.18";
             Process p1 = new Process();
@@ -99,13 +99,13 @@ namespace DLUTToolBox_V2
             }
         }
 
-        async Task EDA()
+        void EDA()
         {
             prelogin();
             netcheck();
         }
 
-        async Task LingShui()
+        void LingShui()
         {
             prelogin_LS();
             netcheck_LS();
@@ -256,7 +256,7 @@ namespace DLUTToolBox_V2
                 html = re;
                 if (re.IndexOf("please") == -1&&re.IndexOf("nline")==-1)
                 {
-                    Growl.FatalGlobal(re);
+                    Growl.InfoGlobal(re);
                 }
             }
             catch (Exception ex)
@@ -302,7 +302,7 @@ namespace DLUTToolBox_V2
             strre = p1.StandardOutput.ReadToEnd();
             p1.WaitForExit();
             p1.Close();
-            if (strre.Length < 1000)
+            if (strre.Length > 1000)
             {
                 loadinfo();
                 Growl.ClearGlobal();
@@ -315,7 +315,7 @@ namespace DLUTToolBox_V2
                 count++;
                 if (count == 1)
                 {
-                    Growl.FatalGlobal("⚠⚠连接失败⚠⚠\n剩余尝试次数"+(5-count)+"次\n连接冷却：4秒");
+                    Growl.InfoGlobal("⚠⚠连接失败⚠⚠\n剩余尝试次数"+(5-count)+"次\n连接冷却：4秒");
                     Thread.Sleep(4000);
                     EDA();
                 }
