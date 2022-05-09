@@ -840,7 +840,6 @@ namespace DLUTToolBox_V2
 
         string formatdataflow(string num)
         {
-            //num = num.Substring(4);
             double temp = double.Parse(num);
             string re = "";
             if (temp > (double)96636764160)
@@ -921,6 +920,7 @@ namespace DLUTToolBox_V2
                 }
                 catch (NullReferenceException e)
                 {
+                    Console.WriteLine(e.Message+"\n"+e.StackTrace);
                     return;
                 }
             });
@@ -960,7 +960,7 @@ namespace DLUTToolBox_V2
                 }
                 catch (NullReferenceException e)
                 {
-                    
+                    Console.WriteLine(e.Message+"\n"+e.StackTrace);
                     return;
                 }
             });
@@ -1285,9 +1285,19 @@ namespace DLUTToolBox_V2
             }
             else
             {
-                Hide();
-                new BrowserWindow("https://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421e0f85388263c2654721d9de29d51367b3449/sso/sso_zzxt.jsp", "", "", 0, 15, "网络自助").ShowDialog();
-                Show();
+                System.Windows.MessageBoxResult messageBoxResult = HandyControl.Controls.MessageBox.Show("当前检测到可能无法连接至开发区校区认证服务器\n是否继续开启开发区校区自服务界面？点击否将会打开网络自助系统", "提示", MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No);
+                if (messageBoxResult == System.Windows.MessageBoxResult.Yes)
+                {
+                    this.Hide();
+                    new SelfService().ShowDialog();
+                    this.Show();
+                }
+                else
+                {
+                    Hide();
+                    new BrowserWindow("https://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421e0f85388263c2654721d9de29d51367b3449/sso/sso_zzxt.jsp", "", "", 0, 15, "网络自助").ShowDialog();
+                    Show();
+                }
             }
         }
 

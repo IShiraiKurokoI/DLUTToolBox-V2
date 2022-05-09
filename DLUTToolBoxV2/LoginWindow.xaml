@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="正在启动登录程序。。。。" Height="200" Width="500" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" x:Name="ThisWindow" Visibility="Hidden">
     <Grid>
-        <Label Content="正在启动登录程序。。。。" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40"/>
+        <Label Content="正在启动登录程序。。。。" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" BorderThickness="0"/>
     </Grid>
 </Window>

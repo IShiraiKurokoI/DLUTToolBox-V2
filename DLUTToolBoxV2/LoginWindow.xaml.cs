@@ -34,6 +34,14 @@ namespace DLUTToolBox_V2
             InitializeComponent();
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            un = Properties.Settings.Default.Uid;
+            pd = Properties.Settings.Default.NetworkPassword;
+            LoginProcedureStarter();
+            //TODO:想个合适的方法把凌水校区登录加进来
+        }
+
         private string PostWebRequest(string postUrl, string paramData, Encoding dataEncode)
         {
             string ret = string.Empty;
@@ -62,18 +70,19 @@ namespace DLUTToolBox_V2
             }
             return ret;
         }
-        async Task starter()
+        async Task LoginProcedureStarter()
         {
             Task.Run(() =>
             {
-                prefix();
-                EDA();
-                //LingShui();
+                if(!PreProcedureNeteorkCheck())
+                {
+                    EDALoginProcedure();
+                }
             });
         }
 
         string info;
-        void prefix()
+        bool PreProcedureNeteorkCheck()
         {
             string checkcommand = "curl --connect-timeout 3 39.156.66.18";
             Process p1 = new Process();
@@ -93,22 +102,30 @@ namespace DLUTToolBox_V2
             if (strre.Length > 1000)
             {
                 loadinfo();
-                Growl.SuccessGlobal("校园网已登入！\n" + info);
-                Thread.Sleep(4000);
-                System.Environment.Exit(0);
+                Growl.SuccessGlobal("校园网已经登入！\n" + info);
+                PostExit(8000);
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
-        void EDA()
+        void EDALoginProcedure()
         {
-            prelogin();
-            netcheck();
+            LoginHandler_EDA();
+            NetworkStateChecker_EDA();
+            PostExit(8000);
         }
 
-        void LingShui()
+        async Task PostExit(int time)
         {
-            prelogin_LS();
-            netcheck_LS();
+            await Task.Delay(time);
+            await Task.Run(() =>
+            {
+                Environment.Exit(0);
+            });
         }
 
         void loadinfo()
@@ -133,7 +150,6 @@ namespace DLUTToolBox_V2
                 string[] data = data_all.Split(new[] { "," }, StringSplitOptions.None);
                 if (data.Length > 2)
                 {
-                    Growl.ClearGlobal();
                     info = "校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow(data[0]) + "\nIPV4地址:\n" + data[5] + "\n网卡MAC地址:\n" + data[3];
                 }
             }
@@ -146,7 +162,6 @@ namespace DLUTToolBox_V2
 
         string formatdataflow(string num)
         {
-            //num = num.Substring(4);
             double temp = double.Parse(num);
             string re = "";
             if (temp > 1000000000)
@@ -188,10 +203,8 @@ namespace DLUTToolBox_V2
         {
             if (PingIp("172.20.20.1") == false)
             {
-
                 Growl.FatalGlobal("认证服务器无法连接\n请检查网线是否插紧或WIFI是否连接正常");
                 Thread.Sleep(100000);
-                System.Environment.Exit(0);
             }
             else
             {
@@ -202,18 +215,12 @@ namespace DLUTToolBox_V2
                 else
                 {
                     loadinfo();
+                    Growl.SuccessGlobal("虽然但是，连接成功了。。。\n您已正常访问互联网\n" + info + "\n登录模块自动退出");
                 }
-                Thread.Sleep(100000);
-                System.Environment.Exit(0);
             }
         }
-        void checkerror_LS()
-        {
-            Growl.FatalGlobal("⚠⚠连接失败⚠⚠");
-            System.Environment.Exit(0);
-        }
 
-        void prelogin()
+        void LoginHandler_EDA()
         {
             
             string[] Paths = new string[2];
@@ -264,26 +271,7 @@ namespace DLUTToolBox_V2
                 Console.WriteLine(ex.Message);
             }
         }
-        void prelogin_LS()
-        {
-            string re = "";
-            string command = "curl  -d \"userId=" + un + "password=" + pd + "\" \"http://auth.dlut.edu.cn/eportal/InterFace.do?method=login\"";
-            Process p1 = new Process();
-            p1.StartInfo.FileName = "cmd.exe";
-            p1.StartInfo.UseShellExecute = false;
-            p1.StartInfo.RedirectStandardInput = true;
-            p1.StartInfo.RedirectStandardOutput = true;
-            p1.StartInfo.RedirectStandardError = true;
-            p1.StartInfo.CreateNoWindow = true;
-            p1.Start();
-            p1.StandardInput.WriteLine(command);
-            p1.StandardInput.WriteLine("exit");
-            p1.StandardInput.AutoFlush = true;
-            re = p1.StandardOutput.ReadToEnd();
-            p1.WaitForExit();
-            p1.Close();
-        }
-        void netcheck()//检查联网状态
+        void NetworkStateChecker_EDA()//检查联网状态
         {
             string strre = "";
             string command = "curl -s  --connect-timeout 10 --header 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'--compressed--header 'Accept-Language: en-US,en;q=0.9'--header 'Cache-Control: max-age=0'--header 'Connection: keep-alive'--header 'Origin: http://172.20.20.1:801'--header 'Referer: http://172.20.20.1:801/srun_portal_pc.php?ac_id=3&'--header 'Upgrade-Insecure-Requests: 1'--user-agent 'Mozilla/5.0 (Windows; U; Windows NT 4.0) AppleWebKit/533.43.4 (KHTML, like Gecko) Version/4.0.5 Safari/533.43.4'--data-binary 'action=login&ac_id=3&user_ip=&nas_ip=&user_mac=&url=&username=" + un + "&password=" + pd + "' 'http://172.20.20.1:801/srun_portal_pc.php?ac_id=3&'";
@@ -305,28 +293,54 @@ namespace DLUTToolBox_V2
             if (strre.Length > 1000)
             {
                 loadinfo();
-                Growl.ClearGlobal();
                 Growl.SuccessGlobal("连接成功\n您已正常连接互联网\n" + info + "\n登录模块自动退出");
-                Thread.Sleep(4000);
-                System.Environment.Exit(0);
+                PostExit(6000);
             }
             else
             {
                 count++;
-                if (count == 1)
+                if (count <5)
                 {
-                    Growl.InfoGlobal("⚠⚠连接失败⚠⚠\n剩余尝试次数"+(5-count)+"次\n连接冷却：4秒");
+                    Growl.InfoGlobal("⚠⚠连接失败⚠⚠\n"+info+"\n剩余尝试次数"+(5-count)+"次\n连接冷却：4秒");
                     Thread.Sleep(4000);
-                    EDA();
+                    EDALoginProcedure();
                 }
                 else if (count == 5)
                 {
+                    Growl.InfoGlobal("正在尝试查找登陆问题。。。");
                     checkerror();
-                    System.Environment.Exit(0);
                 }
             }
         }
-        void netcheck_LS()//检查联网状态
+
+        void LingShuiLoginProcedure()
+        {
+            LoginHandler_LingShui();
+            NetworkStateChecker_LingShui();
+            PostExit(4000);
+        }
+
+        void LoginHandler_LingShui()
+        {
+            string re = "";
+            string command = "curl  -d \"userId=" + un + "password=" + pd + "\" \"http://auth.dlut.edu.cn/eportal/InterFace.do?method=login\"";
+            Process p1 = new Process();
+            p1.StartInfo.FileName = "cmd.exe";
+            p1.StartInfo.UseShellExecute = false;
+            p1.StartInfo.RedirectStandardInput = true;
+            p1.StartInfo.RedirectStandardOutput = true;
+            p1.StartInfo.RedirectStandardError = true;
+            p1.StartInfo.CreateNoWindow = true;
+            p1.Start();
+            p1.StandardInput.WriteLine(command);
+            p1.StandardInput.WriteLine("exit");
+            p1.StandardInput.AutoFlush = true;
+            re = p1.StandardOutput.ReadToEnd();
+            p1.WaitForExit();
+            p1.Close();
+        }
+
+        void NetworkStateChecker_LingShui()//检查联网状态
         {
             string strre = "";
             string command = "curl -s  --connect-timeout 10 --header 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'--compressed--header 'Accept-Language: en-US,en;q=0.9'--header 'Cache-Control: max-age=0'--header 'Connection: keep-alive'--header 'Origin: http://172.20.20.1:801'--header 'Referer: http://172.20.20.1:801/srun_portal_pc.php?ac_id=3&'--header 'Upgrade-Insecure-Requests: 1'--user-agent 'Mozilla/5.0 (Windows; U; Windows NT 4.0) AppleWebKit/533.43.4 (KHTML, like Gecko) Version/4.0.5 Safari/533.43.4'--data-binary 'action=login&ac_id=3&user_ip=&nas_ip=&user_mac=&url=&username=" + un + "&password=" + pd + "' 'http://172.20.20.1:801/srun_portal_pc.php?ac_id=3&'";
@@ -350,15 +364,14 @@ namespace DLUTToolBox_V2
                 loadinfo();
                 ThisWindow.Visibility = Visibility.Hidden;
                 Growl.SuccessGlobal("连接成功\n您已正常连接互联网\n" + info + "\n登录模块自动退出");
-                Thread.Sleep(4000);
-                System.Environment.Exit(0);
+                PostExit(6000);
             }
             else
             {
                 count++;
                 if (count == 3)
                 {
-                    Growl.FatalGlobal("⚠⚠连接失败⚠⚠\n即将自动重试，最大次数6次\n连接冷却：3秒");
+                    Growl.FatalGlobal("⚠⚠连接失败⚠⚠\n即将自动重试，最大次数6次\n连接冷却：4秒");
                 }
                 else if (count == 10)
                 {
@@ -366,16 +379,15 @@ namespace DLUTToolBox_V2
                     checkerror_LS();
                     return;
                 }
-                Thread.Sleep(3000);
-                LingShui();
+                Thread.Sleep(4000);
+                LingShuiLoginProcedure();
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        void checkerror_LS()
         {
-            un = Properties.Settings.Default.Uid;
-            pd = Properties.Settings.Default.NetworkPassword;
-            starter();
+            Growl.FatalGlobal("⚠⚠连接失败⚠⚠");
+            PostExit(4000);
         }
     }
 }

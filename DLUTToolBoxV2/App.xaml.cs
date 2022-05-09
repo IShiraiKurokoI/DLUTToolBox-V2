@@ -44,7 +44,6 @@ namespace DLUTToolBox_V2
         }
         protected override void OnExit(ExitEventArgs e)
         {
-            // 接收参数数组
             if (System.Diagnostics.Process.GetProcessesByName("ToolBox.Core").ToList().Count > 0)
             {
                 NamedPipeClientStream PipeSender = new NamedPipeClientStream("localhost", "ToolBoxCorePipe", PipeDirection.Out, PipeOptions.Asynchronous, TokenImpersonationLevel.None);
@@ -54,7 +53,10 @@ namespace DLUTToolBox_V2
                 sw.AutoFlush = true;
                 sw.WriteLine("Exit");
             }
+            //如果存在工具箱后台主进程，则关闭
             Growl.ClearGlobal();
+            //清空growl消息
+            //TODO:写入日志
             base.OnExit(e);
         }
     }
