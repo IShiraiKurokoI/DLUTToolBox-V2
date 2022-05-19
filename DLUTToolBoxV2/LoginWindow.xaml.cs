@@ -76,7 +76,22 @@ namespace DLUTToolBox_V2
             {
                 if(!PreProcedureNeteorkCheck())
                 {
-                    EDALoginProcedure();
+                    if(PingIp("172.20.20.1"))
+                    {
+                        EDALoginProcedure();
+                    }
+                    else
+                    {
+                        System.Windows.MessageBoxResult messageBoxResult = HandyControl.Controls.MessageBox.Show("当前检测到可能无法连接至开发区校区认证服务器\n是否执行主校区网络登录程序？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.No);
+                        if (messageBoxResult == System.Windows.MessageBoxResult.Yes)
+                        {
+                            LingShuiLoginProcedure();
+                        }
+                        else
+                        {
+                            EDALoginProcedure();
+                        }
+                    }
                 }
             });
         }

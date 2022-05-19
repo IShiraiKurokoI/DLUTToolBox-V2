@@ -53,11 +53,18 @@ namespace DLUTToolBox_V2
             InitializeComponent();
             this.Title = "DLUTToolBox V2-信息总览";
             Overview.Visibility = Visibility.Visible;
-            SettingsInitializer();
-            SetBackgroundImage();
-            AutoLoginChecker();
-            FetchColorFromSystem();
-            SettingsChecker();
+            try
+            {
+                SettingsInitializer();
+                SetBackgroundImage();
+                AutoLoginChecker();
+                FetchColorFromSystem();
+                SettingsChecker();
+            }
+            catch (Exception eee)
+            {
+                Console.WriteLine(eee.StackTrace);
+            }
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -65,7 +72,14 @@ namespace DLUTToolBox_V2
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            netstatusload();
+            try
+            {
+                netstatusload();
+            }
+            catch(Exception eee)
+            {
+                Console.WriteLine(eee.StackTrace);
+            }
         }
 
         bool netload = false;
@@ -115,6 +129,7 @@ namespace DLUTToolBox_V2
                     if (ReConnect==true)
                     {
                         Growl.SuccessGlobal("登陆成功！\n校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow(data[0]) + "\nIPV4地址:" + data[5] + "\n网卡MAC地址:" + data[3]);
+                        WeatherBar.Source = new Uri("http://www.weather.com.cn/");
                     }
                 }
                 if (datawarn == true)
@@ -1093,7 +1108,6 @@ namespace DLUTToolBox_V2
                 netstatusload();
                 ClassTable.Height = 0;
                 TableCirlcle.Visibility = Visibility.Visible;
-                WeatherBar.Source = new Uri("http://www.weather.com.cn/");
                 ClassTable.Source = new Uri("https://api.m.dlut.edu.cn/login?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2fcourseschedule&response_type=code");
                 Eleinfo.Source = new Uri("https://api.m.dlut.edu.cn/oauth/authorize?client_id=19b32196decf419a&redirect_uri=https%3A%2F%2Fcard.m.dlut.edu.cn%2Fhomerj%2FopenRjOAuthPage&response_type=code&scope=base_api&state=weishao");
                 WorkSpace_Web.Source = new Uri("https://sso.dlut.edu.cn/cas/login?service=https%3A%2F%2Fehall.dlut.edu.cn%2Ffp%2Fview%3Fm%3Dfp#act=fp/formHome");
@@ -1357,15 +1371,29 @@ namespace DLUTToolBox_V2
             string re = PostWebRequest("http://172.20.20.1:801/srun_portal_pc.php?ac_id=3&", command, Encoding.ASCII);
             try
             {
-                re = re.Split(new string[] { Properties.Resources.Split }, StringSplitOptions.None)[1].Split(new string[] { "</td>" }, StringSplitOptions.None)[0];
-                if (re.IndexOf("please") == -1&&re.IndexOf("online")==-1)
+                string rre = re.Split(new string[] { Properties.Resources.Split }, StringSplitOptions.None)[1].Split(new string[] { "</td>" }, StringSplitOptions.None)[0];
+                if (rre.IndexOf("please") == -1&&re.IndexOf("online")==-1)
                 {
-                    Growl.InfoGlobal(re);
+                    Growl.InfoGlobal(rre);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                if(ex.Message.IndexOf("超出了数组界限")!=-1)
+                {
+                    if(re.Length>1000)
+                    {
+                        Console.WriteLine("没有检测到登陆失败的原因，应该是自动执行登录成功了，这个越界影响不大");
+                    }
+                    else
+                    {
+                        Console.WriteLine("奇怪的问题，可能是认证服务器的原因。。。。");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
             netstatusload();
         }
