@@ -33,8 +33,8 @@
     <SuiteName>DLUTToolBoxV2</SuiteName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <TrustUrlParameters>true</TrustUrlParameters>
-    <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>1.5.2.%2a</ApplicationVersion>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.5.3.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -122,6 +122,9 @@
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="QRPayCodeWindow.xaml.cs">
+      <DependentUpon>QRPayCodeWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SelfService.xaml.cs">
       <DependentUpon>SelfService.xaml</DependentUpon>
     </Compile>
@@ -149,6 +152,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="QRPayCodeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SelfService.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -304,6 +311,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Web.WebView2">
       <Version>1.0.1150.38</Version>
+    </PackageReference>
+    <PackageReference Include="QRCoder">
+      <Version>1.4.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

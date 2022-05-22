@@ -9,7 +9,7 @@
         xmlns:controls="https://handyorg.github.io/handycontrol"
         Title="BrowserWindow" Height="720" Width="1280" WindowStartupLocation="CenterScreen" Closing="Window_Closing" >
     <Grid>
-        <Wpf:WebView2 x:Name="Web" CoreWebView2InitializationCompleted="Web_CoreWebView2InitializationCompleted" NavigationCompleted="Web_NavigationCompleted" Visibility="Hidden"/>
+        <Wpf:WebView2 x:Name="Web" CoreWebView2InitializationCompleted="Web_CoreWebView2InitializationCompleted" NavigationCompleted="Web_NavigationCompleted" Visibility="Hidden" NavigationStarting="Web_NavigationStarting"/>
         <Canvas>
             <Canvas.Background>
                 <SolidColorBrush Opacity="0.7" Color="AliceBlue"></SolidColorBrush>
@@ -17,7 +17,7 @@
         </Canvas>
         <DockPanel>
             <Grid>
-                <Label x:Name="Browser_Background" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="26" Content="&#13;&#13;&#13;加载中，请稍后" BorderThickness="0" Background="Transparent"/>
+                <Label x:Name="Browser_Background" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="26" Content="&#13;&#13;&#13;加载中，请稍候" BorderThickness="0" Background="Transparent"/>
                 <hc:LoadingCircle VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="LoadingCircle"/>
             </Grid>
         </DockPanel>
