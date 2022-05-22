@@ -823,8 +823,7 @@ namespace DLUTToolBox_V2
                         }
                         if (Web.Source.AbsoluteUri.IndexOf("https://card.m.dlut.edu.cn/homerj/openHomePage?") != -1)
                         {
-                            Web.CoreWebView2.ExecuteScriptAsync("document.getElementsByClassName('code-w')[0].getElementsByTagName('a')[0].outerHTML=''");
-                            Web.CoreWebView2.ExecuteScriptAsync("document.getElementsByClassName('code-w')[0].getElementsByTagName('a')[0].style='width:400px;text-align:center'");
+
                         }
                         switch (count)
                         {
@@ -937,13 +936,19 @@ namespace DLUTToolBox_V2
             Console.WriteLine(e.Uri);
             if(e.Uri.StartsWith("https://ibsbjstar.ccb.com.cn/CCBIS/B2CMainPlat"))
             {
-                Growl.SuccessGlobal("正在打开建行Web支付页面，请自行支付!");
-                Process.Start(e.Uri);
+                if(e.Uri.IndexOf("?CLIENTIP=&BRANCHID=") !=-1)
+                {
+                    Growl.SuccessGlobal("正在打开建行Web支付页面，请自行支付!");
+                    Process.Start(e.Uri);
+                }
             }
             if(e.Uri.StartsWith("alipays://"))
             {
-                Growl.SuccessGlobal("链接获取成功，请点击打开支付宝APP后使用手机支付宝扫码付款！");
                 new QRPayCodeWindow(e.Uri).Show();
+            }
+            if(e.Uri.StartsWith("https://mclient.alipay.com/cashier/mobilepay.htm?"))
+            {
+                Growl.SuccessGlobal("链接获取成功，请点击打开支付宝APP后使用手机支付宝扫码付款！");
             }
             if (e.Uri.StartsWith("weixin://"))
             {

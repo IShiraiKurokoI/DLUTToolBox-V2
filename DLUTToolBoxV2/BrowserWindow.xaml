@@ -17,7 +17,7 @@
         </Canvas>
         <DockPanel>
             <Grid>
-                <Label x:Name="Browser_Background" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="26" Content="&#13;&#13;&#13;加载中，请稍候" BorderThickness="0" Background="Transparent"/>
+                <Label x:Name="Browser_Background" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="26" Content="&#13;&#13;&#13;加载中，请稍候喵" BorderThickness="0" Background="Transparent"/>
                 <hc:LoadingCircle VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="LoadingCircle"/>
             </Grid>
         </DockPanel>
