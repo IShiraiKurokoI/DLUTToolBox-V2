@@ -15,6 +15,7 @@ using HandyControl.Controls;
 using Microsoft.Web.WebView2.Core;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
 
 namespace DLUTToolBox_V2
 {
@@ -929,6 +930,31 @@ namespace DLUTToolBox_V2
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Web.Dispose();
+        }
+
+        private void Web_NavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
+        {
+            Console.WriteLine(e.Uri);
+            if(e.Uri.StartsWith("https://ibsbjstar.ccb.com.cn/CCBIS/B2CMainPlat"))
+            {
+                Growl.SuccessGlobal("正在打开建行Web支付页面，请自行支付!");
+                Process.Start(e.Uri);
+            }
+            if(e.Uri.StartsWith("alipays://"))
+            {
+                Growl.SuccessGlobal("链接获取成功，请点击打开支付宝APP后使用手机支付宝扫码付款！");
+                new QRPayCodeWindow(e.Uri).Show();
+            }
+            if (e.Uri.StartsWith("weixin://"))
+            {
+                Growl.InfoGlobal("暂不支持微信支付功能,敬请期待（TNND微信接口太难用了）");
+                e.Cancel = true;
+            }
+            if (e.Uri.IndexOf("mobile/api/unifiedOrderIndex.action?")!=-1)
+            {
+                Growl.SuccessGlobal("链接获取成功，请使用云闪付手机APP扫码付款！");
+                new QRPayCodeWindow(e.Uri).Show();
+            }
         }
     }
 }
