@@ -3,11 +3,11 @@
 全新UI，全新体验
 同时带来大量修复与性能改进
 信息总览
-![img](https://user-images.githubusercontent.com/73374735/158935822-c124f410-686f-4dfe-9239-d84bb95fe1bc.png)
+![image](https://user-images.githubusercontent.com/73374735/170491264-3e3f45c4-e919-4f45-aa20-687cb2218f36.png)
 网络工具
 ![image](https://user-images.githubusercontent.com/73374735/170432253-b3e0d461-9d7f-4dc4-bb21-21e2915d3636.png)
 日常缴费
-![img](https://user-images.githubusercontent.com/73374735/158936305-9574f121-920d-49b0-9692-b70f788bc1a4.png)
+![image](https://user-images.githubusercontent.com/73374735/170491288-acf693ed-5468-4ba7-aac4-44ec2627a131.png)
 考试教务
 ![image](https://user-images.githubusercontent.com/73374735/170432209-470e9a12-595a-452c-bc57-4208437287dd.png)
 学习生活
