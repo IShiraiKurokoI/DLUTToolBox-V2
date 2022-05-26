@@ -44,14 +44,14 @@ namespace DLUTToolBox_V2
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : System.Windows.Window
+    public partial class MainWindow : HandyControl.Controls.Window
     {
         PanelSelected _PanelSelected = PanelSelected.Overview;
         bool DoSettingsInitialized = false;
         public MainWindow()
         {
             InitializeComponent();
-            this.Title = "DLUTToolBox V2-信息总览";
+            this.TitleLabel.Content ="DLUTToolBox V2-信息总览";
             Overview.Visibility = Visibility.Visible;
             try
             {
@@ -169,7 +169,7 @@ namespace DLUTToolBox_V2
         {
             if(Properties.Settings.Default.Uid.Length *Properties.Settings.Default.UnionPassword.Length*Properties.Settings.Default.NetworkPassword.Length==0)
             {
-                this.Title = "DLUTToolBox V2-参数配置";
+                this.TitleLabel.Content ="DLUTToolBox V2-参数配置";
                 Growl.InfoGlobal("请先完善信息配置！\n邮箱及其密码为非必填项\n您可以稍后点击参数设置打开此界面\n输入完成后使用其他功能即可\n所有更改均会自动保存");
                 HideOthers();
                 SettingsPanel.Visibility = Visibility.Visible;
@@ -389,7 +389,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.Overview;
-            this.Title = "DLUTToolBox V2-信息总览";
+            this.TitleLabel.Content ="DLUTToolBox V2-信息总览";
             Overview.Visibility = Visibility.Visible;
         }
 
@@ -397,7 +397,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.NetWork;
-            this.Title = "DLUTToolBox V2-网络工具";
+            this.TitleLabel.Content ="DLUTToolBox V2-网络工具";
             Network.Visibility = Visibility.Visible;
         }
 
@@ -405,7 +405,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.Electricty;
-            this.Title = "DLUTToolBox V2-日常缴费";
+            this.TitleLabel.Content ="DLUTToolBox V2-日常缴费";
             Electricity.Visibility = Visibility.Visible;
         }
 
@@ -413,7 +413,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.Exam;
-            this.Title = "DLUTToolBox V2-考试教务";
+            this.TitleLabel.Content ="DLUTToolBox V2-考试教务";
             Exam.Visibility = Visibility.Visible;
         }
 
@@ -421,7 +421,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.Study;
-            this.Title = "DLUTToolBox V2-学习生活";
+            this.TitleLabel.Content ="DLUTToolBox V2-学习生活";
             Study.Visibility = Visibility.Visible;
         }
 
@@ -429,15 +429,18 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.WorkSpace;
-            this.Title = "DLUTToolBox V2-办事大厅";
+            this.TitleLabel.Content ="DLUTToolBox V2-办事大厅";
             WorkSpace.Visibility = Visibility.Visible;
+            Backward.Visibility = Visibility.Visible;
+            Forward.Visibility=Visibility.Visible;
+            AddressBox.Visibility = Visibility.Visible;
         }
 
         private void SideMenuItem_Selected_6(object sender, RoutedEventArgs e)
         {
             HideOthers();
             _PanelSelected = PanelSelected.Library;
-            this.Title = "DLUTToolBox V2-图书馆";
+            this.TitleLabel.Content ="DLUTToolBox V2-图书馆";
             Library.Visibility = Visibility.Visible;
         }
 
@@ -445,7 +448,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.Other;
-            this.Title = "DLUTToolBox V2-其它系统";
+            this.TitleLabel.Content ="DLUTToolBox V2-其它系统";
             Other.Visibility = Visibility.Visible;
         }
 
@@ -455,7 +458,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.System;
-            this.Title = "DLUTToolBox V2-系统工具";
+            this.TitleLabel.Content ="DLUTToolBox V2-系统工具";
             System_Panel.Visibility = Visibility.Visible;
             if(System_PanelInitialized==false)
             {
@@ -474,7 +477,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.Settings;
-            this.Title = "DLUTToolBox V2-参数配置";
+            this.TitleLabel.Content ="DLUTToolBox V2-参数配置";
             SettingsPanel.Visibility = Visibility.Visible;
         }
 
@@ -482,7 +485,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.About;
-            this.Title = "DLUTToolBox V2-关于软件";
+            this.TitleLabel.Content ="DLUTToolBox V2-关于软件";
             AboutPanel.Visibility = Visibility.Visible;
         }
 
@@ -518,6 +521,9 @@ namespace DLUTToolBox_V2
                 case PanelSelected.WorkSpace:
                     {
                         WorkSpace.Visibility = Visibility.Hidden;
+                        Backward.Visibility = Visibility.Hidden;
+                        Forward.Visibility = Visibility.Hidden;
+                        AddressBox.Visibility = Visibility.Hidden;
                         break;
                     }
                 case PanelSelected.Library:
@@ -1686,6 +1692,7 @@ namespace DLUTToolBox_V2
 
         private void WorkSpace_Web_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
+            AddressBox.Text = WorkSpace_Web.Source.AbsoluteUri;
             if (WorkSpace_Web.Source.AbsoluteUri.IndexOf("https://sso.dlut.edu.cn/cas/login?service=") != -1)
             {
                 login();
@@ -2419,5 +2426,14 @@ namespace DLUTToolBox_V2
             }
         }
 
+        private void Forward_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Backward_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

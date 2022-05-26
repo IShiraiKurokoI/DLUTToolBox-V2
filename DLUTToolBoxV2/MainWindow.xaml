@@ -1,13 +1,33 @@
-﻿<Window xmlns:Wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"  x:Class="DLUTToolBox_V2.MainWindow"
+﻿<hc:Window xmlns:Wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"  x:Class="DLUTToolBox_V2.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DLUTToolBox_V2"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:controls="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
+        OtherButtonForeground="{DynamicResource ReverseTextBrush}"
+        NonClientAreaBackground="{DynamicResource ToolBarBackground}"
+        NonClientAreaHeight="42"
+        ShowTitle="False"
+        ShowIcon="True"
         Title="DLUTToolBox V2" Height="720" Width="1400" MinHeight="720" MinWidth="1400" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing">
+    <hc:Window.NonClientAreaContent>
+        <StackPanel Orientation="Horizontal" Height="42">
+            <Label x:Name="TitleLabel" BorderThickness="0" Background="Transparent" FontSize="16"/>
+            <Button x:Name="Backward" Click="Backward_Click" Foreground="Transparent" Margin="15,0,0,0" Visibility="Hidden">
+                <Button.Content>
+                    <Image Source="/DlUTToolBoxV2;component/Resources/backward.png" Stretch="Fill"/>
+                </Button.Content>
+            </Button>
+            <Button x:Name="Forward" Click="Forward_Click" Foreground="Transparent" Margin="5,0,0,0" Visibility="Hidden">
+                <Button.Content>
+                    <Image Source="/DlUTToolBoxV2;component/Resources/forward.png" Stretch="Fill"/>
+                </Button.Content>
+            </Button>
+            <TextBox x:Name="AddressBox" HorizontalAlignment="Stretch" Margin="6,0,10,0" FontSize="14" Height="30" Width="800" Visibility="Hidden"/>
+        </StackPanel>
+    </hc:Window.NonClientAreaContent>
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right" Panel.ZIndex="11">
             <StackPanel controls:Growl.GrowlParent="True"  VerticalAlignment="Top" Margin="0,10,10,10"/>
@@ -310,4 +330,4 @@
             </Canvas>
         </Viewbox>
     </Grid>
-</Window>
+</hc:Window>

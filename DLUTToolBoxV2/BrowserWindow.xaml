@@ -1,4 +1,4 @@
-﻿<Window xmlns:Wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"  x:Class="DLUTToolBox_V2.BrowserWindow"
+﻿<hc:Window xmlns:Wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"  x:Class="DLUTToolBox_V2.BrowserWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,7 +7,32 @@
         mc:Ignorable="d"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:controls="https://handyorg.github.io/handycontrol"
-        Title="BrowserWindow" Height="720" Width="1280" WindowStartupLocation="CenterScreen" Closing="Window_Closing" >
+        OtherButtonForeground="{DynamicResource ReverseTextBrush}"
+        NonClientAreaBackground="{DynamicResource ToolBarBackground}"
+        NonClientAreaHeight="42"
+        ShowTitle="False"
+        Title="BrowserWindow" Height="720" Width="1280" WindowStartupLocation="CenterScreen" Closing="Window_Closing" SizeChanged="Window_SizeChanged">
+    <hc:Window.NonClientAreaContent>
+        <StackPanel Orientation="Horizontal" Height="42">
+            <Button x:Name="ReturnToMain" Click="ReturnToMain_Click" Foreground="Transparent">
+                <Button.Content>
+                    <Image Source="/DlUTToolBoxV2;component/Resources/backward.png" Stretch="Fill"/>
+                </Button.Content>
+            </Button>
+            <Label x:Name="TitleLabel" BorderThickness="0" Background="Transparent" FontSize="16"/>
+            <Button x:Name="Backward" Click="Backward_Click" Foreground="Transparent" Margin="15,0,0,0">
+                <Button.Content>
+                    <Image Source="/DlUTToolBoxV2;component/Resources/backward.png" Stretch="Fill"/>
+                </Button.Content>
+            </Button>
+            <Button x:Name="Forward" Click="Forward_Click" Foreground="Transparent" Margin="5,0,0,0">
+                <Button.Content>
+                    <Image Source="/DlUTToolBoxV2;component/Resources/forward.png" Stretch="Fill"/>
+                </Button.Content>
+            </Button>
+            <TextBox x:Name="AddressBox" HorizontalAlignment="Stretch" Margin="6,0,10,0" FontSize="14" Height="30"/>
+        </StackPanel>
+    </hc:Window.NonClientAreaContent>
     <Grid>
         <Wpf:WebView2 x:Name="Web" CoreWebView2InitializationCompleted="Web_CoreWebView2InitializationCompleted" NavigationCompleted="Web_NavigationCompleted" Visibility="Hidden" NavigationStarting="Web_NavigationStarting"/>
         <Canvas>
@@ -22,4 +47,4 @@
             </Grid>
         </DockPanel>
     </Grid>
-</Window>
+</hc:Window>

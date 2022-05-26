@@ -22,7 +22,7 @@ namespace DLUTToolBox_V2
     /// <summary>
     /// BrowserWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class BrowserWindow : System.Windows.Window
+    public partial class BrowserWindow : HandyControl.Controls.Window
     {
         string FinalUri = "";
         string rejump = "";
@@ -32,13 +32,25 @@ namespace DLUTToolBox_V2
         public BrowserWindow(string Url, string _FinalUri, string _rejump, int jumpwaittime, int _specialhandlenum, string _name)
         {
             InitializeComponent();
-            this.Title = _name;
+            this.TitleLabel.Content = _name;
             count = 0;
             time = jumpwaittime;
             Web.Source = new Uri(Url);
             FinalUri = _FinalUri;
             rejump = _rejump;
-            specialhandlenum = _specialhandlenum;
+            specialhandlenum = _specialhandlenum; 
+            if ((this.Width - 450) > 100)
+            {
+                if (AddressBox.Visibility == Visibility.Hidden)
+                {
+                    AddressBox.Visibility = Visibility.Visible;
+                }
+                AddressBox.Width = this.Width - 450;
+            }
+            else
+            {
+                AddressBox.Visibility = Visibility.Hidden;
+            }
             if (specialhandlenum == 23)
             {
                 Web.Visibility = Visibility.Visible;
@@ -47,10 +59,14 @@ namespace DLUTToolBox_V2
             {
                 this.Width = this.Width - 850;
                 this.Height = this.Height + 100;
+                this.Backward.Visibility = Visibility.Hidden;
+                this.Forward.Visibility = Visibility.Hidden;
+                this.ResizeMode = ResizeMode.CanMinimize;
             }
             if (specialhandlenum == 24)
             {
                 this.Width = this.Width - 900;
+                this.ResizeMode = ResizeMode.CanMinimize;
             }
             if (specialhandlenum == 25)
             {
@@ -222,6 +238,14 @@ namespace DLUTToolBox_V2
         bool webvpn = false;
         private void Web_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
         {
+            if(Web.Source.AbsolutePath.IndexOf("C:/") ==-1)
+            {
+                AddressBox.Text = Web.Source.AbsoluteUri;
+            }
+            else
+            {
+                AddressBox.Text = "校园网状态监控页面";
+            }
             if (Web.CoreWebView2.DocumentTitle.IndexOf("过期") != -1)
             {
                 Web.ExecuteScriptAsync("document.getElementsByClassName('layui-layer-btn0')[0].click()");
@@ -959,6 +983,37 @@ namespace DLUTToolBox_V2
             {
                 Growl.SuccessGlobal("链接获取成功，请使用云闪付手机APP扫码付款！");
                 new QRPayCodeWindow(e.Uri).Show();
+            }
+        }
+
+        private void ReturnToMain_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void Backward_Click(object sender, RoutedEventArgs e)
+        {
+            Web.GoBack();
+        }
+
+        private void Forward_Click(object sender, RoutedEventArgs e)
+        {
+            Web.GoForward();
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if ((this.Width - 450) > 100)
+            {
+                if(AddressBox.Visibility==Visibility.Hidden)
+                {
+                    AddressBox.Visibility = Visibility.Visible;
+                }
+                AddressBox.Width = this.Width - 450;
+            }
+            else
+            {
+                AddressBox.Visibility = Visibility.Hidden;
             }
         }
     }
