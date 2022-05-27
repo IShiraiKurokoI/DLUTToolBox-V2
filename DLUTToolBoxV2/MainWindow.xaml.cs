@@ -2428,12 +2428,12 @@ namespace DLUTToolBox_V2
 
         private void Forward_Click(object sender, RoutedEventArgs e)
         {
-
+            WorkSpace_Web.GoForward();
         }
 
         private void Backward_Click(object sender, RoutedEventArgs e)
         {
-
+            WorkSpace_Web.GoBack();
         }
     }
 }

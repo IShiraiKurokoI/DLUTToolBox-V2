@@ -39,13 +39,13 @@ namespace DLUTToolBox_V2
             FinalUri = _FinalUri;
             rejump = _rejump;
             specialhandlenum = _specialhandlenum; 
-            if ((this.Width - 450) > 100)
+            if ((this.Width - 480) > 100)
             {
                 if (AddressBox.Visibility == Visibility.Hidden)
                 {
                     AddressBox.Visibility = Visibility.Visible;
                 }
-                AddressBox.Width = this.Width - 450;
+                AddressBox.Width = this.Width - 480;
             }
             else
             {
@@ -1003,13 +1003,13 @@ namespace DLUTToolBox_V2
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if ((this.Width - 450) > 100)
+            if ((this.Width - 480) > 100)
             {
                 if(AddressBox.Visibility==Visibility.Hidden)
                 {
                     AddressBox.Visibility = Visibility.Visible;
                 }
-                AddressBox.Width = this.Width - 450;
+                AddressBox.Width = this.Width - 480;
             }
             else
             {

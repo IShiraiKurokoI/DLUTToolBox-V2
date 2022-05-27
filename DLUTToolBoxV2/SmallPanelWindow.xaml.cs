@@ -23,7 +23,7 @@ namespace DLUTToolBox_V2
     /// <summary>
     /// SmallPanelWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class SmallPanelWindow : System.Windows.Window
+    public partial class SmallPanelWindow :  HandyControl.Controls.Window
     {
         bool Restarted = false;
         bool BG = false;
@@ -35,20 +35,20 @@ namespace DLUTToolBox_V2
             {
                 case 0:
                     {
-                        this.Title = "Adobe下载指引";
+                        this.TitleLabel.Content = "Adobe下载指引";
                         Adobe.Visibility = Visibility.Visible;
                         break;
                     }
                 case 1:
                     {
-                        this.Title = "文件夹背景调整";
+                        this.TitleLabel.Content = "文件夹背景调整";
                         BG = true;
                         Folderbg.Visibility = Visibility.Visible;
                         break;
                     }
                 case 2:
                     {
-                        this.Title = "文件夹背景调整";
+                        this.TitleLabel.Content = "文件夹背景调整";
                         BG = true;
                         Folderbg.Visibility = Visibility.Visible;
                         Restarted = true;
@@ -356,6 +356,11 @@ namespace DLUTToolBox_V2
             {
                 tryloadprevioussettings();
             }
+        }
+
+        private void ReturnToMain_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

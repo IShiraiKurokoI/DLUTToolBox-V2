@@ -22,13 +22,25 @@ namespace DLUTToolBox_V2
     /// <summary>
     /// SelfService.xaml 的交互逻辑
     /// </summary>
-    public partial class SelfService : System.Windows.Window
+    public partial class SelfService :  HandyControl.Controls.Window
     {
         int count = 0;
         public SelfService()
         {
             InitializeComponent();
             SetBackgroundImage();
+            if ((this.Width - 480) > 100)
+            {
+                if (AddressBox.Visibility == Visibility.Hidden)
+                {
+                    AddressBox.Visibility = Visibility.Visible;
+                }
+                AddressBox.Width = this.Width - 480;
+            }
+            else
+            {
+                AddressBox.Visibility = Visibility.Hidden;
+            }
             Web.DefaultBackgroundColor = System.Drawing.Color.Transparent;
         }
 
@@ -57,6 +69,7 @@ namespace DLUTToolBox_V2
 
         private void Web_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
+            AddressBox.Text = Web.Source.AbsoluteUri;
             if (Web.Source.AbsoluteUri == "http://172.20.20.1:8800/user/operate/index")
             {
                 Web.CoreWebView2.ExecuteScriptAsync("document.getElementsByClassName('radio')[0].innerHTML='<label><input type=\"radio\" name=\"OperateForm[shiftType]\" value=\"1\"> 立即生效</label><label><input type=\"radio\" name=\"OperateForm[shiftType]\" value=\"2\"> 下个周期生效</label>'");
@@ -142,6 +155,38 @@ namespace DLUTToolBox_V2
             CAPTCHA.Visibility = Visibility.Hidden;
             CAPTCHABox.Visibility = Visibility.Hidden;
             login();
+        }
+
+        private void Backward_Click(object sender, RoutedEventArgs e)
+        {
+            Web.GoBack();
+        }
+
+        private void Forward_Click(object sender, RoutedEventArgs e)
+        {
+            Web.GoForward();
+        }
+
+        private void ReturnToMain_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+
+            if ((this.Width - 480) > 100)
+            {
+                if (AddressBox.Visibility == Visibility.Hidden)
+                {
+                    AddressBox.Visibility = Visibility.Visible;
+                }
+                AddressBox.Width = this.Width - 480;
+            }
+            else
+            {
+                AddressBox.Visibility = Visibility.Hidden;
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<Window x:Class="DLUTToolBox_V2.SmallPanelWindow"
+﻿<hc:Window x:Class="DLUTToolBox_V2.SmallPanelWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,7 +7,21 @@
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:controls="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
+        OtherButtonForeground="{DynamicResource ReverseTextBrush}"
+        NonClientAreaBackground="{DynamicResource ToolBarBackground}"
+        NonClientAreaHeight="30"
+        ShowTitle="False"
         Title="SmallPanelWindow" Height="630" Width="1200" MinWidth="1200" MinHeight="630" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+    <hc:Window.NonClientAreaContent>
+        <StackPanel Orientation="Horizontal" Height="30">
+            <Button x:Name="ReturnToMain" Click="ReturnToMain_Click" Foreground="Transparent">
+                <Button.Content>
+                    <Image Source="/DlUTToolBoxV2;component/Resources/backward.png" Stretch="Fill"/>
+                </Button.Content>
+            </Button>
+            <Label x:Name="TitleLabel" BorderThickness="0" Background="Transparent" FontSize="16"/>
+        </StackPanel>
+    </hc:Window.NonClientAreaContent>
     <Grid>
         <Canvas x:Name="BackgroundBlur" Visibility="Visible">
             <Canvas.Background>
@@ -73,4 +87,4 @@
             </DockPanel>
         </DockPanel>
     </Grid>
-</Window>
+</hc:Window>
