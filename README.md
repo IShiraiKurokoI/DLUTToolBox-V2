@@ -21,6 +21,6 @@
 系统工具
 ![image](https://user-images.githubusercontent.com/73374735/170432124-08788dab-d05e-48b6-85fa-1fc74ae05fd2.png)
 参数配置
-![image](https://user-images.githubusercontent.com/73374735/170432099-3ce968f0-8bb9-4509-88be-a0e54bf0c98c.png)
+![image](https://user-images.githubusercontent.com/73374735/170911664-d2f1ae31-7ac2-4cb9-8ce1-e910a9f21895.png)
 关于软件
 ![image](https://user-images.githubusercontent.com/73374735/170432042-9afb07ca-20ff-439c-8a07-16a79b1ebacc.png)
