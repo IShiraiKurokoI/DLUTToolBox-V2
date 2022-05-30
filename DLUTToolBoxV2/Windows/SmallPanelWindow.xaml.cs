@@ -234,13 +234,15 @@ namespace DLUTToolBox_V2
         }
 
 
-        void SendMessageToCore(string msg)
+        async Task SendMessageToCore(string msg)
         {
             NamedPipeClientStream PipeSender = new NamedPipeClientStream("localhost", "ToolBoxCorePipe", PipeDirection.Out, PipeOptions.Asynchronous, TokenImpersonationLevel.None);
             StreamWriter sw = null;
             bool started = true;
+            LogHelper.WriteInfoLog("尝试向后台IPC发送信息:" + msg);
             if (System.Diagnostics.Process.GetProcessesByName("ToolBox.Core").ToList().Count == 0)
             {
+                LogHelper.WriteInfoLog("后台IPC未启动，正在启动 ");
                 Process P = new Process();
                 P.StartInfo.UseShellExecute = true;
                 P.StartInfo.FileName = System.IO.Directory.GetCurrentDirectory() + "\\Binary\\Win64\\Core\\ToolBox.Core.exe";
@@ -252,21 +254,26 @@ namespace DLUTToolBox_V2
             {
                 if (started == true)
                 {
+                    LogHelper.WriteInfoLog("尝试连接IPC");
                     PipeSender.Connect(2000);
                 }
                 else
                 {
-                    PipeSender.Connect(10000);
+                    LogHelper.WriteInfoLog("尝试连接IPC");
+                    PipeSender.Connect(5000);
                 }
             }
             catch (Exception e)
             {
-                Growl.FatalGlobal("⚠IPC连接失败！⚠" + e.Message + "\n" + e.Source);
+                Growl.InfoGlobal("⚠IPC连接失败！⚠");
+                LogHelper.WriteErrLog(e);
                 return;
             }
             sw = new StreamWriter(PipeSender);
             sw.AutoFlush = true;
+            LogHelper.WriteInfoLog("发送信息");
             sw.WriteLine(msg);
+            LogHelper.WriteInfoLog("结束发送");
             sw.WriteLine("End");
         }
 

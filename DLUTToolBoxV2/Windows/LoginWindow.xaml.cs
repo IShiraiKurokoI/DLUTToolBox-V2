@@ -31,6 +31,7 @@ namespace DLUTToolBox_V2
         string html = "";
         public LoginWindow()
         {
+            LogHelper.WriteInfoLog("登录窗口已打开");
             InitializeComponent();
         }
 
@@ -116,6 +117,7 @@ namespace DLUTToolBox_V2
             p1.Close();
             if (strre.Length > 1000)
             {
+                LogHelper.WriteInfoLog("网络已连接无需登录");
                 loadinfo();
                 Growl.SuccessGlobal("校园网已经登入！\n" + info);
                 PostExit(8000);
@@ -166,6 +168,7 @@ namespace DLUTToolBox_V2
                 if (data.Length > 2)
                 {
                     info = "校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow(data[0]) + "\nIPV4地址:\n" + data[5] + "\n网卡MAC地址:\n" + data[3];
+                    LogHelper.WriteInfoLog("登陆成功"+info);
                 }
             }
             else

@@ -33,8 +33,8 @@
     <SuiteName>DLUTToolBoxV2</SuiteName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <TrustUrlParameters>true</TrustUrlParameters>
-    <ApplicationRevision>3</ApplicationRevision>
-    <ApplicationVersion>1.6.1.%2a</ApplicationVersion>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.7.1.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -116,31 +116,33 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BrowserWindow.xaml.cs">
+    <Compile Include="Windows\BrowserWindow.xaml.cs">
       <DependentUpon>BrowserWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LoginWindow.xaml.cs">
+    <Compile Include="Helper\GithubIPHelper.cs" />
+    <Compile Include="Helper\LogHelper.cs" />
+    <Compile Include="Windows\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="QRPayCodeWindow.xaml.cs">
+    <Compile Include="Helper\MiniDump.cs" />
+    <Compile Include="Windows\QRPayCodeWindow.xaml.cs">
       <DependentUpon>QRPayCodeWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SelfService.xaml.cs">
+    <Compile Include="Windows\SelfService.xaml.cs">
       <DependentUpon>SelfService.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SmallPanelWindow.xaml.cs">
+    <Compile Include="Windows\SmallPanelWindow.xaml.cs">
       <DependentUpon>SmallPanelWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WindowEffect.cs" />
-    <Page Include="BrowserWindow.xaml">
+    <Page Include="Windows\BrowserWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LoginWindow.xaml">
+    <Page Include="Windows\LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -148,19 +150,19 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="QRPayCodeWindow.xaml">
+    <Page Include="Windows\QRPayCodeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SelfService.xaml">
+    <Page Include="Windows\SelfService.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SmallPanelWindow.xaml">
+    <Page Include="Windows\SmallPanelWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -184,6 +186,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="DLUTToolBox V2_TemporaryKey.pfx" />
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -311,8 +316,26 @@
     <PackageReference Include="HandyControls">
       <Version>3.3.11</Version>
     </PackageReference>
+    <PackageReference Include="HandyControls.Lang.zh-CN">
+      <Version>3.3.11</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging">
+      <Version>6.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions">
+      <Version>6.0.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Web.WebView2">
       <Version>1.0.1150.38</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="NLog">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="NLog.Schema">
+      <Version>5.0.0</Version>
     </PackageReference>
     <PackageReference Include="QRCoder">
       <Version>1.4.3</Version>
@@ -373,5 +396,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

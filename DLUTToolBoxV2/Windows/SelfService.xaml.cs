@@ -28,6 +28,7 @@ namespace DLUTToolBox_V2
         public SelfService()
         {
             InitializeComponent();
+            LogHelper.WriteInfoLog("打开自服务页面");
             SetBackgroundImage();
             if ((this.Width - 480) > 100)
             {

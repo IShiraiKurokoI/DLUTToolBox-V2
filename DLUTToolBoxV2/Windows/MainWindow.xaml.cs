@@ -24,9 +24,96 @@ using System.Runtime.InteropServices;
 using System.Net.NetworkInformation;
 using Microsoft.Web.WebView2.Core;
 using System.Threading;
+using Newtonsoft.Json;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DLUTToolBox_V2
 {
+
+    public class GithubLatest
+    {
+        public string url { get; set; }
+        public string assets_url { get; set; }
+        public string upload_url { get; set; }
+        public string html_url { get; set; }
+        public int id { get; set; }
+        public Author author { get; set; }
+        public string node_id { get; set; }
+        public string tag_name { get; set; }
+        public string target_commitish { get; set; }
+        public string name { get; set; }
+        public bool draft { get; set; }
+        public bool prerelease { get; set; }
+        public DateTime created_at { get; set; }
+        public DateTime published_at { get; set; }
+        public Asset[] assets { get; set; }
+        public string tarball_url { get; set; }
+        public string zipball_url { get; set; }
+        public string body { get; set; }
+    }
+
+    public class Author
+    {
+        public string login { get; set; }
+        public int id { get; set; }
+        public string node_id { get; set; }
+        public string avatar_url { get; set; }
+        public string gravatar_id { get; set; }
+        public string url { get; set; }
+        public string html_url { get; set; }
+        public string followers_url { get; set; }
+        public string following_url { get; set; }
+        public string gists_url { get; set; }
+        public string starred_url { get; set; }
+        public string subscriptions_url { get; set; }
+        public string organizations_url { get; set; }
+        public string repos_url { get; set; }
+        public string events_url { get; set; }
+        public string received_events_url { get; set; }
+        public string type { get; set; }
+        public bool site_admin { get; set; }
+    }
+
+    public class Asset
+    {
+        public string url { get; set; }
+        public int id { get; set; }
+        public string node_id { get; set; }
+        public string name { get; set; }
+        public object label { get; set; }
+        public Uploader uploader { get; set; }
+        public string content_type { get; set; }
+        public string state { get; set; }
+        public int size { get; set; }
+        public int download_count { get; set; }
+        public DateTime created_at { get; set; }
+        public DateTime updated_at { get; set; }
+        public string browser_download_url { get; set; }
+    }
+
+    public class Uploader
+    {
+        public string login { get; set; }
+        public int id { get; set; }
+        public string node_id { get; set; }
+        public string avatar_url { get; set; }
+        public string gravatar_id { get; set; }
+        public string url { get; set; }
+        public string html_url { get; set; }
+        public string followers_url { get; set; }
+        public string following_url { get; set; }
+        public string gists_url { get; set; }
+        public string starred_url { get; set; }
+        public string subscriptions_url { get; set; }
+        public string organizations_url { get; set; }
+        public string repos_url { get; set; }
+        public string events_url { get; set; }
+        public string received_events_url { get; set; }
+        public string type { get; set; }
+        public bool site_admin { get; set; }
+    }
+
     public enum PanelSelected
     {
         Overview,
@@ -51,7 +138,7 @@ namespace DLUTToolBox_V2
         public MainWindow()
         {
             InitializeComponent();
-            this.TitleLabel.Content ="DLUTToolBox V2-信息总览";
+            this.TitleLabel.Content = "DLUTToolBox V2-信息总览";
             Overview.Visibility = Visibility.Visible;
             try
             {
@@ -61,9 +148,10 @@ namespace DLUTToolBox_V2
                 FetchColorFromSystem();
                 SettingsChecker();
             }
-            catch (Exception eee)
+            catch (Exception e)
             {
-                Console.WriteLine(eee.StackTrace);
+                Console.WriteLine(e.StackTrace);
+                LogHelper.WriteErrLog(e);
             }
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -76,9 +164,10 @@ namespace DLUTToolBox_V2
             {
                 netstatusload();
             }
-            catch(Exception eee)
+            catch (Exception ex)
             {
-                Console.WriteLine(eee.StackTrace);
+                Console.WriteLine(ex.StackTrace);
+                LogHelper.WriteErrLog(ex);
             }
         }
 
@@ -126,7 +215,7 @@ namespace DLUTToolBox_V2
                     {
                         checkforupdate();
                     }
-                    if (ReConnect==true)
+                    if (ReConnect == true)
                     {
                         Growl.SuccessGlobal("登陆成功！\n校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow(data[0]) + "\nIPV4地址:" + data[5] + "\n网卡MAC地址:" + data[3]);
                         WeatherBar.Source = new Uri("http://www.weather.com.cn/");
@@ -167,9 +256,9 @@ namespace DLUTToolBox_V2
 
         private void SettingsChecker()
         {
-            if(Properties.Settings.Default.Uid.Length *Properties.Settings.Default.UnionPassword.Length*Properties.Settings.Default.NetworkPassword.Length==0)
+            if (Properties.Settings.Default.Uid.Length * Properties.Settings.Default.UnionPassword.Length * Properties.Settings.Default.NetworkPassword.Length == 0)
             {
-                this.TitleLabel.Content ="DLUTToolBox V2-参数配置";
+                this.TitleLabel.Content = "DLUTToolBox V2-参数配置";
                 Growl.InfoGlobal("请先完善信息配置！\n邮箱及其密码为非必填项\n您可以稍后点击参数设置打开此界面\n输入完成后使用其他功能即可\n所有更改均会自动保存");
                 HideOthers();
                 SettingsPanel.Visibility = Visibility.Visible;
@@ -203,8 +292,10 @@ namespace DLUTToolBox_V2
             NamedPipeClientStream PipeSender = new NamedPipeClientStream("localhost", "ToolBoxCorePipe", PipeDirection.Out, PipeOptions.Asynchronous, TokenImpersonationLevel.None);
             StreamWriter sw = null;
             bool started = true;
+            LogHelper.WriteInfoLog("尝试向后台IPC发送信息:"+msg);
             if (System.Diagnostics.Process.GetProcessesByName("ToolBox.Core").ToList().Count == 0)
             {
+                LogHelper.WriteInfoLog("后台IPC未启动，正在启动 ");
                 Process P = new Process();
                 P.StartInfo.UseShellExecute = true;
                 P.StartInfo.FileName = System.IO.Directory.GetCurrentDirectory() + "\\Binary\\Win64\\Core\\ToolBox.Core.exe";
@@ -216,26 +307,32 @@ namespace DLUTToolBox_V2
             {
                 if (started == true)
                 {
+                    LogHelper.WriteInfoLog("尝试连接IPC");
                     PipeSender.Connect(2000);
                 }
                 else
                 {
+                    LogHelper.WriteInfoLog("尝试连接IPC");
                     PipeSender.Connect(5000);
                 }
             }
             catch (Exception e)
             {
-                Growl.InfoGlobal("⚠IPC连接失败！⚠\n"+ e.Message + "\n" + e.StackTrace + e.Source);
+                Growl.InfoGlobal("⚠IPC连接失败！⚠");
+                LogHelper.WriteErrLog(e);
                 return;
             }
             sw = new StreamWriter(PipeSender);
             sw.AutoFlush = true;
+            LogHelper.WriteInfoLog("发送信息");
             sw.WriteLine(msg);
+            LogHelper.WriteInfoLog("结束发送");
             sw.WriteLine("End");
         }
 
         private void AutoLoginChecker()
         {
+            LogHelper.WriteInfoLog("正在检查自动登录配置文件");
             if (File.Exists("Network.config"))
             {
                 string[] Paths = new string[2];
@@ -255,7 +352,7 @@ namespace DLUTToolBox_V2
                     }
                     sr.Close();
                 }
-                if(Paths[0]!= Properties.Settings.Default.Uid||Paths[1]!= Properties.Settings.Default.NetworkPassword)
+                if (Paths[0] != Properties.Settings.Default.Uid || Paths[1] != Properties.Settings.Default.NetworkPassword)
                 {
                     File.Delete("Network.config");
                     FileStream fs = new FileStream("Network.config", FileMode.OpenOrCreate, FileAccess.ReadWrite);
@@ -273,7 +370,7 @@ namespace DLUTToolBox_V2
                 sw.WriteLine(Properties.Settings.Default.NetworkPassword);
                 sw.Close();
             }
-                if (Properties.Settings.Default.DoAutoLogin == false)
+            if (Properties.Settings.Default.DoAutoLogin == false)
             {
                 if (IsExists("AutoLogin3.0"))
                 {
@@ -362,25 +459,25 @@ namespace DLUTToolBox_V2
 
         private void SettingsInitializer()
         {
-            _Uid.Text=Properties.Settings.Default.Uid;
-            UnionPassword.Password=Properties.Settings.Default.UnionPassword;
-            NetworkPassword.Password=Properties.Settings.Default.NetworkPassword;
-            MailAddress.Text=Properties.Settings.Default.MailAddress;
-            MailPassword.Password=Properties.Settings.Default.MailPassword;
-            DoAutoLogin.IsChecked=Properties.Settings.Default.DoAutoLogin;
-            DoAutoThemeFollow.IsChecked=Properties.Settings.Default.DoAutoThemeFollow;
-            DoAutoUpdate.IsChecked=Properties.Settings.Default.DoAutoUpdate;
-            if(Properties.Settings.Default.BackGroundStrechMethod=="Fill")
+            _Uid.Text = Properties.Settings.Default.Uid;
+            UnionPassword.Password = Properties.Settings.Default.UnionPassword;
+            NetworkPassword.Password = Properties.Settings.Default.NetworkPassword;
+            MailAddress.Text = Properties.Settings.Default.MailAddress;
+            MailPassword.Password = Properties.Settings.Default.MailPassword;
+            DoAutoLogin.IsChecked = Properties.Settings.Default.DoAutoLogin;
+            DoAutoThemeFollow.IsChecked = Properties.Settings.Default.DoAutoThemeFollow;
+            DoAutoUpdate.IsChecked = Properties.Settings.Default.DoAutoUpdate;
+            if (Properties.Settings.Default.BackGroundStrechMethod == "Fill")
             {
-                Fill.IsChecked=true;
+                Fill.IsChecked = true;
             }
-            else if(Properties.Settings.Default.BackGroundStrechMethod=="Uniform")
+            else if (Properties.Settings.Default.BackGroundStrechMethod == "Uniform")
             {
-                Uniform.IsChecked=true;
+                Uniform.IsChecked = true;
             }
-            else if(Properties.Settings.Default.BackGroundStrechMethod == "UniformToFill")
+            else if (Properties.Settings.Default.BackGroundStrechMethod == "UniformToFill")
             {
-                UniformToFill.IsChecked=true;
+                UniformToFill.IsChecked = true;
             }
             DoSettingsInitialized = true;
         }
@@ -389,7 +486,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.Overview;
-            this.TitleLabel.Content ="DLUTToolBox V2-信息总览";
+            this.TitleLabel.Content = "DLUTToolBox V2-信息总览";
             Overview.Visibility = Visibility.Visible;
         }
 
@@ -397,7 +494,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.NetWork;
-            this.TitleLabel.Content ="DLUTToolBox V2-网络工具";
+            this.TitleLabel.Content = "DLUTToolBox V2-网络工具";
             Network.Visibility = Visibility.Visible;
         }
 
@@ -405,7 +502,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.Electricty;
-            this.TitleLabel.Content ="DLUTToolBox V2-日常缴费";
+            this.TitleLabel.Content = "DLUTToolBox V2-日常缴费";
             Electricity.Visibility = Visibility.Visible;
         }
 
@@ -413,7 +510,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.Exam;
-            this.TitleLabel.Content ="DLUTToolBox V2-考试教务";
+            this.TitleLabel.Content = "DLUTToolBox V2-考试教务";
             Exam.Visibility = Visibility.Visible;
         }
 
@@ -421,7 +518,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.Study;
-            this.TitleLabel.Content ="DLUTToolBox V2-学习生活";
+            this.TitleLabel.Content = "DLUTToolBox V2-学习生活";
             Study.Visibility = Visibility.Visible;
         }
 
@@ -429,10 +526,10 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.WorkSpace;
-            this.TitleLabel.Content ="DLUTToolBox V2-办事大厅";
+            this.TitleLabel.Content = "DLUTToolBox V2-办事大厅";
             WorkSpace.Visibility = Visibility.Visible;
             Backward.Visibility = Visibility.Visible;
-            Forward.Visibility=Visibility.Visible;
+            Forward.Visibility = Visibility.Visible;
             AddressBox.Visibility = Visibility.Visible;
         }
 
@@ -440,7 +537,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.Library;
-            this.TitleLabel.Content ="DLUTToolBox V2-图书馆";
+            this.TitleLabel.Content = "DLUTToolBox V2-图书馆";
             Library.Visibility = Visibility.Visible;
         }
 
@@ -448,19 +545,19 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.Other;
-            this.TitleLabel.Content ="DLUTToolBox V2-其它系统";
+            this.TitleLabel.Content = "DLUTToolBox V2-其它系统";
             Other.Visibility = Visibility.Visible;
         }
 
-        bool System_PanelInitialized=false;
+        bool System_PanelInitialized = false;
 
         private void SideMenuItem_Selected_8(object sender, RoutedEventArgs e)
         {
             HideOthers();
             _PanelSelected = PanelSelected.System;
-            this.TitleLabel.Content ="DLUTToolBox V2-系统工具";
+            this.TitleLabel.Content = "DLUTToolBox V2-系统工具";
             System_Panel.Visibility = Visibility.Visible;
-            if(System_PanelInitialized==false)
+            if (System_PanelInitialized == false)
             {
                 kbbanloader();
                 spacebanloader();
@@ -469,7 +566,7 @@ namespace DLUTToolBox_V2
                 TimeLineloader();
                 onedriveloader();
                 HighResolutionLoader();
-                System_PanelInitialized=true;
+                System_PanelInitialized = true;
             }
         }
 
@@ -477,7 +574,7 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.Settings;
-            this.TitleLabel.Content ="DLUTToolBox V2-参数配置";
+            this.TitleLabel.Content = "DLUTToolBox V2-参数配置";
             SettingsPanel.Visibility = Visibility.Visible;
         }
 
@@ -485,13 +582,13 @@ namespace DLUTToolBox_V2
         {
             HideOthers();
             _PanelSelected = PanelSelected.About;
-            this.TitleLabel.Content ="DLUTToolBox V2-关于软件";
+            this.TitleLabel.Content = "DLUTToolBox V2-关于软件";
             AboutPanel.Visibility = Visibility.Visible;
         }
 
         private void HideOthers()
         {
-            switch(_PanelSelected)
+            switch (_PanelSelected)
             {
                 case PanelSelected.Overview:
                     {
@@ -561,8 +658,8 @@ namespace DLUTToolBox_V2
         {
             if (DoSettingsInitialized == true)
             {
-            Properties.Settings.Default.Uid = _Uid.Text;
-            Properties.Settings.Default.Save();
+                Properties.Settings.Default.Uid = _Uid.Text;
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -570,8 +667,8 @@ namespace DLUTToolBox_V2
         {
             if (DoSettingsInitialized == true)
             {
-            Properties.Settings.Default.MailAddress = MailAddress.Text;
-            Properties.Settings.Default.Save();
+                Properties.Settings.Default.MailAddress = MailAddress.Text;
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -579,8 +676,8 @@ namespace DLUTToolBox_V2
         {
             if (DoSettingsInitialized == true)
             {
-            Properties.Settings.Default.UnionPassword = UnionPassword.Password;
-            Properties.Settings.Default.Save();
+                Properties.Settings.Default.UnionPassword = UnionPassword.Password;
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -588,8 +685,8 @@ namespace DLUTToolBox_V2
         {
             if (DoSettingsInitialized == true)
             {
-            Properties.Settings.Default.NetworkPassword = NetworkPassword.Password;
-            Properties.Settings.Default.Save();
+                Properties.Settings.Default.NetworkPassword = NetworkPassword.Password;
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -597,8 +694,8 @@ namespace DLUTToolBox_V2
         {
             if (DoSettingsInitialized == true)
             {
-            Properties.Settings.Default.MailPassword = MailPassword.Password;
-            Properties.Settings.Default.Save();
+                Properties.Settings.Default.MailPassword = MailPassword.Password;
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -646,13 +743,16 @@ namespace DLUTToolBox_V2
             }
         }
 
+        bool ManualCheck = false;
+
         private void DoAutoUpdate_Checked(object sender, RoutedEventArgs e)
         {
             if (DoSettingsInitialized == true)
             {
                 Properties.Settings.Default.DoAutoUpdate = (bool)DoAutoUpdate.IsChecked;
                 Properties.Settings.Default.Save();
-                checkforupdate_manual();
+                ManualCheck = true;
+                checkforupdate();
                 Growl.SuccessGlobal("已开启自动更新");
             }
         }
@@ -688,7 +788,7 @@ namespace DLUTToolBox_V2
         {
             Properties.Settings.Default.BackgroundImageUrl = "";
             Properties.Settings.Default.Save();
-            this.Background=null;
+            this.Background = null;
             Growl.SuccessGlobal("背景重置成功！");
         }
 
@@ -696,8 +796,8 @@ namespace DLUTToolBox_V2
         {
             if (DoSettingsInitialized == true)
             {
-            Properties.Settings.Default.BackGroundStrechMethod = "Fill";
-            Properties.Settings.Default.Save();
+                Properties.Settings.Default.BackGroundStrechMethod = "Fill";
+                Properties.Settings.Default.Save();
                 SetBackgroundImage();
             }
         }
@@ -706,8 +806,8 @@ namespace DLUTToolBox_V2
         {
             if (DoSettingsInitialized == true)
             {
-            Properties.Settings.Default.BackGroundStrechMethod = "UniformToFill";
-            Properties.Settings.Default.Save();
+                Properties.Settings.Default.BackGroundStrechMethod = "UniformToFill";
+                Properties.Settings.Default.Save();
                 SetBackgroundImage();
             }
         }
@@ -716,15 +816,15 @@ namespace DLUTToolBox_V2
         {
             if (DoSettingsInitialized == true)
             {
-            Properties.Settings.Default.BackGroundStrechMethod = "Uniform";
-            Properties.Settings.Default.Save();
+                Properties.Settings.Default.BackGroundStrechMethod = "Uniform";
+                Properties.Settings.Default.Save();
                 SetBackgroundImage();
             }
         }
 
         private void CopySettings_Click(object sender, RoutedEventArgs e)
         {
-            string configstring = "DLUTToolBoxV2SettingString/" + Properties.Settings.Default.Uid + "/" + Properties.Settings.Default.UnionPassword + "/" + Properties.Settings.Default.NetworkPassword + "/" + Properties.Settings.Default.MailAddress + "/" + Properties.Settings.Default.MailPassword + "/" + Properties.Settings.Default.BackgroundImageUrl + "/" + Properties.Settings.Default.BackGroundStrechMethod + "/" + Properties.Settings.Default.DoAutoLogin + "/" + Properties.Settings.Default.DoAutoThemeFollow + "/" +Properties.Settings.Default.DoAutoUpdate;
+            string configstring = "DLUTToolBoxV2SettingString/" + Properties.Settings.Default.Uid + "/" + Properties.Settings.Default.UnionPassword + "/" + Properties.Settings.Default.NetworkPassword + "/" + Properties.Settings.Default.MailAddress + "/" + Properties.Settings.Default.MailPassword + "/" + Properties.Settings.Default.BackgroundImageUrl + "/" + Properties.Settings.Default.BackGroundStrechMethod + "/" + Properties.Settings.Default.DoAutoLogin + "/" + Properties.Settings.Default.DoAutoThemeFollow + "/" + Properties.Settings.Default.DoAutoUpdate;
             var array = Encoding.UTF8.GetBytes(configstring);
             configstring = Convert.ToBase64String(array);
             Clipboard.SetText(configstring);
@@ -749,7 +849,7 @@ namespace DLUTToolBox_V2
             {
                 if (config_all[0] != "ToolBoxSettingString")
                 {
-                    if(config_all[0] == "DLUTToolBoxV2SettingString")
+                    if (config_all[0] == "DLUTToolBoxV2SettingString")
                     {
                         try
                         {
@@ -852,9 +952,23 @@ namespace DLUTToolBox_V2
             Growl.SuccessGlobal("清理完成！");
         }
 
+        private void OpenLogFolder_Click(object sender, RoutedEventArgs e)
+        {
+            if (Directory.Exists(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName.Replace("DLUTToolBoxV2.exe", "Log\\")))
+            {
+                Process.Start(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName.Replace("DLUTToolBoxV2.exe", "Log\\"));
+            }
+            else
+            {
+                Growl.InfoGlobal("日志记录为空！");
+            }
+        }
+
         private void ManualUpdate_Click(object sender, RoutedEventArgs e)
         {
-            checkforupdate_manual();
+            Growl.InfoGlobal("正在检查更新，请稍候。。。");
+            ManualCheck = true;
+            checkforupdate();
         }
 
         bool datawarn = false;
@@ -893,7 +1007,6 @@ namespace DLUTToolBox_V2
                 request.Method = "GET";
                 request.ContentType = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
                 request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36";
-
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                 Stream myResponseStream = response.GetResponseStream();
                 int statusCode = (int)response.StatusCode;
@@ -907,6 +1020,7 @@ namespace DLUTToolBox_V2
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                LogHelper.WriteErrLog(ex);
             }
             return ret;
         }
@@ -917,13 +1031,12 @@ namespace DLUTToolBox_V2
                 try
                 {
                     string updmessage = GetWebRequest("https://api.github.com/repos/MuoRanLY/DLUTToolBox-V2/releases/latest", Encoding.ASCII);
-                    var lines = updmessage.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                    string versionname = Array.Find(lines, line => line.IndexOf("\"name\":") != -1).Split(new string[] { "\"name\": \"" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "\"," }, StringSplitOptions.RemoveEmptyEntries)[0];
-                    string size = formatdataflow(Array.Find(lines, line => line.IndexOf("\"size\":") != -1).Split(new string[] { "\"size\":" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)[0]);
-                    string upddate = Array.Find(lines, line => line.IndexOf("\"updated_at\":") != -1).Split(new string[] { "\"updated_at\": \"" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "\"," }, StringSplitOptions.RemoveEmptyEntries)[0].Split(new string[] { "T" }, StringSplitOptions.RemoveEmptyEntries)[0];
-                    string downloadurl = Array.Find(lines, line => line.IndexOf("\"browser_download_url\":") != -1).Split(new string[] { "\"browser_download_url\": \"" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "\"" }, StringSplitOptions.RemoveEmptyEntries)[0];
-                    string body = Array.Find(lines, line => line.IndexOf("\"body\":") != -1).Split(new string[] { "\"body\": \"" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "\"" }, StringSplitOptions.RemoveEmptyEntries)[0];
-                    body = body.Replace("\\r\\n", "\n");
+                    GithubLatest latest = JsonConvert.DeserializeObject<GithubLatest>(updmessage);
+                    string versionname = latest.name;
+                    string size = formatdataflow(latest.assets[0].size.ToString());
+                    string upddate = latest.assets[0].updated_at.ToLocalTime().ToLongDateString() + latest.assets[0].updated_at.ToLocalTime().ToLongTimeString();
+                    string downloadurl = latest.assets[0].browser_download_url;
+                    string body = latest.body;
                     string[] Ver = new string[1];
                     if (File.Exists("Version.txt"))
                     {
@@ -936,82 +1049,73 @@ namespace DLUTToolBox_V2
                     }
                     if (versionname != Ver[0])
                     {
-                        showmessage("最新版本：" + versionname + "\n大小：" + size + "\n更新日期：" + upddate + "\n更新内容：\n" + body, downloadurl);
-                    }
-                }
-                catch (NullReferenceException e)
-                {
-                    Console.WriteLine(e.Message+"\n"+e.StackTrace);
-                    return;
-                }
-            });
-        }
-        async Task checkforupdate_manual()
-        {
-            Task.Run(async () =>
-            {
-                try
-                {
-                    string updmessage = GetWebRequest("https://api.github.com/repos/MuoRanLY/DLUTToolBox-V2/releases/latest", Encoding.ASCII);
-                    var lines = updmessage.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                    string versionname = Array.Find(lines, line => line.IndexOf("\"name\":") != -1).Split(new string[] { "\"name\": \"" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "\"," }, StringSplitOptions.RemoveEmptyEntries)[0];
-                    string size = formatdataflow(Array.Find(lines, line => line.IndexOf("\"size\":") != -1).Split(new string[] { "\"size\":" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)[0]);
-                    string upddate = Array.Find(lines, line => line.IndexOf("\"updated_at\":") != -1).Split(new string[] { "\"updated_at\": \"" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "\"," }, StringSplitOptions.RemoveEmptyEntries)[0].Split(new string[] { "T" }, StringSplitOptions.RemoveEmptyEntries)[0];
-                    string downloadurl = Array.Find(lines, line => line.IndexOf("\"browser_download_url\":") != -1).Split(new string[] { "\"browser_download_url\": \"" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "\"" }, StringSplitOptions.RemoveEmptyEntries)[0];
-                    string body = Array.Find(lines, line => line.IndexOf("\"body\":") != -1).Split(new string[] { "\"body\": \"" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "\"" }, StringSplitOptions.RemoveEmptyEntries)[0];
-                    body = body.Replace("\\r\\n", "\n");
-                    string[] Ver = new string[1];
-                    if (File.Exists("Version.txt"))
-                    {
-                        using (StreamReader sr = new StreamReader("Version.txt"))
-                        {
-                            // 从文件读取并显示行，直到文件的末尾 
-                            Ver[0] = sr.ReadLine();
-                            sr.Close();
-                        }
-                    }
-                    if (versionname != Ver[0])
-                    {
-                        showmessage("最新版本：" + versionname + "\n大小：" + size + "\n更新日期：" + upddate + "\n更新内容：\n" + body, downloadurl);
+                        LogHelper.WriteInfoLog("检测到新版本" + versionname + "\n大小：" + size + "\n更新日期：" + upddate + "\n更新内容：\n" + body + "\n" + downloadurl);
+                        ShowUpdateMessage("最新版本：" + versionname + "\n大小：" + size + "\n更新日期：" + upddate + "\n更新内容：\n" + body, downloadurl);
                     }
                     else
                     {
-                        Growl.InfoGlobal("当前已经是最新版本！");
+                        if(ManualCheck==true)
+                        {
+                            Growl.InfoGlobal("当前已经是最新版本！");
+                        }
                     }
                 }
                 catch (NullReferenceException e)
                 {
-                    Console.WriteLine(e.Message+"\n"+e.StackTrace);
+                    Console.WriteLine(e.Message + "\n" + e.StackTrace);
+                    LogHelper.WriteErrLog(e);
+                    Growl.InfoGlobal(e.Message);
+                    return;
+                }
+                catch (Newtonsoft.Json.JsonSerializationException ee)
+                {
+                    Console.WriteLine(ee.Message + "\n" + ee.StackTrace);
+                    LogHelper.WriteErrLog(ee);
+                    Growl.InfoGlobal(ee.Message);
+                    return;
+                }
+                catch (Newtonsoft.Json.JsonReaderException ee)
+                {
+                    Console.WriteLine(ee.Message + "\n" + ee.StackTrace);
+                    LogHelper.WriteErrLog(ee);
+                    Growl.InfoGlobal(ee.Message);
                     return;
                 }
             });
         }
 
-        void showmessage(string a, string url)
+        void ShowUpdateMessage(string a, string url)
         {
-            System.Windows.MessageBoxResult messageBoxResult = HandyControl.Controls.MessageBox.Show(a, "检测到新版本！是否更新？", MessageBoxButton.YesNo, MessageBoxImage.Information,MessageBoxResult.No);
-            if (messageBoxResult == System.Windows.MessageBoxResult.Yes)
+            System.Windows.MessageBoxResult messageBoxResult = HandyControl.Controls.MessageBox.Ask(a, "检测到新版本！是否更新？");
+            if (messageBoxResult == System.Windows.MessageBoxResult.OK)
             {
                 StartDownloadAndSetup(url);
             }
             else
             {
-                Growl.InfoGlobal("取消更新");
+                Growl.SuccessGlobal("更新已取消");
             }
         }
 
         void StartDownloadAndSetup(string url)
         {
-                if (File.Exists(System.IO.Path.GetTempPath() + @"\NewVersion.rar"))
-                {
-                    File.Delete(System.IO.Path.GetTempPath() + @"\NewVersion.rar");
-                }
-                if (Directory.Exists(System.IO.Path.GetTempPath() + @".\NewVersion\"))
-                {
-                    Directory.Delete(System.IO.Path.GetTempPath() + @".\NewVersion\", true);
-                }
-                Growl.InfoGlobal("开始下载新版本\n从Github下载可能较慢，请耐心等待！");
-                HttpDownloadFile(url, System.IO.Path.GetTempPath() + @"\NewVersion.rar");
+            if (File.Exists(System.IO.Path.GetTempPath() + @"\NewVersion.rar"))
+            {
+                File.Delete(System.IO.Path.GetTempPath() + @"\NewVersion.rar");
+            }
+            if (Directory.Exists(System.IO.Path.GetTempPath() + @".\NewVersion\"))
+            {
+                Directory.Delete(System.IO.Path.GetTempPath() + @".\NewVersion\", true);
+            }
+            Growl.InfoGlobal("开始下载新版本\n从Github下载可能较慢，请耐心等待！");
+            string newip = DLUTToolBox_V2.GithubIPHelper.GetGithubIP();
+            if(newip!=null)
+            {
+                url = url.Replace("github.com", newip);
+                SetCertificatePolicy();
+            }
+            if(HttpDownloadFile(url, System.IO.Path.GetTempPath() + @"\NewVersion.rar"))
+            {
                 Process p = new Process();
                 p.StartInfo.FileName = Environment.CurrentDirectory + @"\ThirdParty\Unrar\UnRAR.exe";
                 p.StartInfo.UseShellExecute = false;
@@ -1034,6 +1138,7 @@ namespace DLUTToolBox_V2
                     catch (Exception e)
                     {
                         Growl.FatalGlobal(e.Message);
+                        LogHelper.WriteErrLog(e);
                     }
                 }
                 else
@@ -1041,37 +1146,65 @@ namespace DLUTToolBox_V2
                     try
                     {
                         Process.Start(System.IO.Path.GetTempPath() + @".\NewVersion\DLUTToolBoxV2\");
+                        Growl.SuccessGlobal("已为您打开安装程序文件夹，您可以稍后自行手动安装！");
                     }
                     catch (Exception e)
                     {
                         Growl.FatalGlobal(e.Message);
+                        LogHelper.WriteErrLog(e);
                     }
                 }
+            }
+        }
+        /// <summary>
+        /// 设置证书安全性
+        /// </summary>
+        private static void SetCertificatePolicy()
+        {
+            ServicePointManager.ServerCertificateValidationCallback += RemoteCertificateValidate;
         }
 
+        ///  <summary>
+        ///  远程证书验证
+        ///  </summary>
+        private static bool RemoteCertificateValidate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
+        {
+            return true;
+        }
         /// <summary>
         /// Http下载文件
         /// </summary>
-        public static string HttpDownloadFile(string url, string path)
+        public static bool HttpDownloadFile(string url, string path)
         {
-            // 设置参数
-            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
-            //发送请求并获取相应回应数据
-            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-            //直到request.GetResponse()程序才开始向目标网页发送Post请求
-            Stream responseStream = response.GetResponseStream();
-            //创建本地文件写入流
-            Stream stream = new FileStream(path, FileMode.Create);
-            byte[] bArr = new byte[1024];
-            int size = responseStream.Read(bArr, 0, (int)bArr.Length);
-            while (size > 0)
+            try
             {
-                stream.Write(bArr, 0, size);
-                size = responseStream.Read(bArr, 0, (int)bArr.Length);
+                // 设置参数
+                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+                //发送请求并获取相应回应数据
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                //直到request.GetResponse()程序才开始向目标网页发送Post请求
+                Stream responseStream = response.GetResponseStream();
+                //创建本地文件写入流
+                Stream stream = new FileStream(path, FileMode.Create);
+                byte[] bArr = new byte[10240000];
+                int size = responseStream.Read(bArr, 0, (int)bArr.Length);
+                while (size > 0)
+                {
+                    stream.Write(bArr, 0, size);
+                    size = responseStream.Read(bArr, 0, (int)bArr.Length);
+                }
+                stream.Close();
+                responseStream.Close();
+                return true;
             }
-            stream.Close();
-            responseStream.Close();
-            return path;
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + e.StackTrace);
+                LogHelper.WriteErrLog(e);
+                Growl.InfoGlobal(e.Message);
+                return false;
+            }
+
         }
 
         //关于面板
@@ -1104,8 +1237,9 @@ namespace DLUTToolBox_V2
 
         private void WeatherBar_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
         {
-            if (WeatherBar.Source.AbsoluteUri.IndexOf("172.20.20.1")!=-1)
+            if (WeatherBar.Source.AbsoluteUri.IndexOf("172.20.20.1") != -1)
             {
+                LogHelper.WriteInfoLog("检测到未登录打开工具箱，尝试登陆");
                 Task.Run(() =>
                 {
                     ReConnect = true;
@@ -1126,6 +1260,7 @@ namespace DLUTToolBox_V2
 
         async Task WeatherHandle()
         {
+            LogHelper.WriteInfoLog("天气页面优化");
             await WeatherBar.CoreWebView2.ExecuteScriptAsync("document.body.innerHTML=document.getElementsByClassName('myWeather')[0].outerHTML");
             await WeatherBar.CoreWebView2.ExecuteScriptAsync("document.getElementsByClassName('myWeatherTop')[0].outerHTML=''");
             await WeatherBar.CoreWebView2.ExecuteScriptAsync("document.getElementsByTagName('a')[0].outerHTML=\"\"");
@@ -1142,7 +1277,7 @@ namespace DLUTToolBox_V2
             ClassTable.CoreWebView2.Settings.IsStatusBarEnabled = false;
             ClassTable.CoreWebView2.Settings.IsSwipeNavigationEnabled = false;
             ClassTable.CoreWebView2.Settings.IsZoomControlEnabled = false;
-            ClassTable.DefaultBackgroundColor =System.Drawing.Color.Transparent; 
+            ClassTable.DefaultBackgroundColor = System.Drawing.Color.Transparent;
         }
 
         bool warnshown_2 = false;
@@ -1153,7 +1288,7 @@ namespace DLUTToolBox_V2
             string upd = Properties.Settings.Default.UnionPassword;
             if (un.Length * upd.Length == 0)
             {
-                if (warnshown_2 == false && (Overview.Visibility==Visibility.Visible))
+                if (warnshown_2 == false && (Overview.Visibility == Visibility.Visible))
                 {
                     Growl.InfoGlobal("未配置信息，无法查询课表！");
                     warnshown_2 = true;
@@ -1173,6 +1308,7 @@ namespace DLUTToolBox_V2
 
         async Task apiloginforClassTable()
         {
+            LogHelper.WriteInfoLog("执行主界面课表认证");
             string jscode = "username.value='" + Properties.Settings.Default.Uid + "'";
             string jscode1 = "password.value='" + Properties.Settings.Default.UnionPassword + "'";
             await ClassTable.CoreWebView2.ExecuteScriptAsync(jscode);
@@ -1185,6 +1321,7 @@ namespace DLUTToolBox_V2
 
         async Task resize()
         {
+            LogHelper.WriteInfoLog("课表页面优化");
             await Task.Delay(1000);
             await ClassTable.CoreWebView2.ExecuteScriptAsync("document.getElementsByTagName('div')[4].style=\"overflow:auto;\"");
             await ClassTable.CoreWebView2.ExecuteScriptAsync("document.body.style=\"background-color:transparent\"");
@@ -1192,7 +1329,7 @@ namespace DLUTToolBox_V2
             await ClassTable.CoreWebView2.ExecuteScriptAsync("document.getElementsByClassName('header')[0].outerHTML=\"\"");
             await ClassTable.CoreWebView2.ExecuteScriptAsync("document.getElementsByClassName('bottom')[0].style=\"height: 650px; \"");
             await ClassTable.CoreWebView2.ExecuteScriptAsync("document.getElementsByClassName('wrap')[0].style=\"background-color:transparent\"");
-            ClassTable.Height =600;
+            ClassTable.Height = 600;
             TableCirlcle.Visibility = Visibility.Hidden;
         }
 
@@ -1243,6 +1380,7 @@ namespace DLUTToolBox_V2
         }
         async Task apiloginforEleinfo()
         {
+            LogHelper.WriteInfoLog("执行主界面电费认证");
             string jscode = "username.value='" + Properties.Settings.Default.Uid + "'";
             string jscode1 = "password.value='" + Properties.Settings.Default.UnionPassword + "'";
             await Eleinfo.CoreWebView2.ExecuteScriptAsync(jscode);
@@ -1378,27 +1516,30 @@ namespace DLUTToolBox_V2
             try
             {
                 string rre = re.Split(new string[] { Properties.Resources.Split }, StringSplitOptions.None)[1].Split(new string[] { "</td>" }, StringSplitOptions.None)[0];
-                if (rre.IndexOf("please") == -1&&re.IndexOf("online")==-1)
+                if (rre.IndexOf("please") == -1 && re.IndexOf("online") == -1)
                 {
                     Growl.InfoGlobal(rre);
                 }
             }
             catch (Exception ex)
             {
-                if(ex.Message.IndexOf("超出了数组界限")!=-1)
+                if (ex.Message.IndexOf("超出了数组界限") != -1)
                 {
-                    if(re.Length>1000)
+                    if (re.Length > 1000)
                     {
                         Console.WriteLine("没有检测到登陆失败的原因，应该是自动执行登录成功了，这个越界影响不大");
+                        LogHelper.WriteDebugLog("没有检测到登陆失败的原因，应该是自动执行登录成功了，这个越界影响不大");
                     }
                     else
                     {
                         Console.WriteLine("奇怪的问题，可能是认证服务器的原因。。。。");
+                        LogHelper.WriteDebugLog("奇怪的问题，可能是认证服务器的原因。。。。");
                     }
                 }
                 else
                 {
                     Console.WriteLine(ex.Message);
+                    LogHelper.WriteErrLog(ex);
                 }
             }
             netstatusload();
@@ -1430,6 +1571,7 @@ namespace DLUTToolBox_V2
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                LogHelper.WriteErrLog(ex);
             }
             return ret;
         }
@@ -1456,9 +1598,10 @@ namespace DLUTToolBox_V2
                     Growl.InfoGlobal("抱歉！\n暂不支持开发区校区之外的注销功能！");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                LogHelper.WriteErrLog(ex);
             }
         }
 
@@ -1677,7 +1820,7 @@ namespace DLUTToolBox_V2
             }
             downloadOperation = e.DownloadOperation; // Store the 'DownloadOperation' for later use in events
             downloadOperation.StateChanged += DownloadOperation_StateChanged;
-            Growl.InfoGlobal("下载已启动！\n"+ "文件名：" + filename + "\n储存路径：" + e.ResultFilePath.ToString() + "\n文件大小：" + formatdataflow(downloadOperation.TotalBytesToReceive.Value.ToString()) + "\n预计完成时间：" + downloadOperation.EstimatedEndTime.ToString());
+            Growl.InfoGlobal("下载已启动！\n" + "文件名：" + filename + "\n储存路径：" + e.ResultFilePath.ToString() + "\n文件大小：" + formatdataflow(downloadOperation.TotalBytesToReceive.Value.ToString()) + "\n预计完成时间：" + downloadOperation.EstimatedEndTime.ToString());
         }
 
         private void DownloadOperation_StateChanged(object sender, object e)
@@ -1851,7 +1994,7 @@ namespace DLUTToolBox_V2
 
         private void MeltdownPatchSwitch_Checked(object sender, RoutedEventArgs e)
         {
-            if(PatchInitialized==true)
+            if (PatchInitialized == true)
             {
                 SendMessageToCore("12");
                 kbbanreloader();
@@ -1869,24 +2012,24 @@ namespace DLUTToolBox_V2
 
         async Task kbbanloader()
         {
-                RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
-                RegistryKey hkmm = hklm.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management", false);
-                if (hkmm.GetValue("FeatureSettingsOverride") == null)
+            RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+            RegistryKey hkmm = hklm.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management", false);
+            if (hkmm.GetValue("FeatureSettingsOverride") == null)
+            {
+                MeltdownPatchSwitch.IsChecked = true;
+            }
+            else
+            {
+                if (hkmm.GetValue("FeatureSettingsOverride").ToString() == "0")
                 {
                     MeltdownPatchSwitch.IsChecked = true;
                 }
                 else
                 {
-                    if (hkmm.GetValue("FeatureSettingsOverride").ToString() == "0")
-                    {
-                        MeltdownPatchSwitch.IsChecked = true;
-                    }
-                    else
-                    {
-                        MeltdownPatchSwitch.IsChecked = false;
-                    }
+                    MeltdownPatchSwitch.IsChecked = false;
                 }
-                PatchInitialized = true;
+            }
+            PatchInitialized = true;
         }
         async Task kbbanreloader()
         {
@@ -1916,11 +2059,11 @@ namespace DLUTToolBox_V2
                 }
             });
         }
-        bool ShipInitialized=false;
+        bool ShipInitialized = false;
 
         private void ReserveShipping_Checked(object sender, RoutedEventArgs e)
         {
-            if(ShipInitialized==true)
+            if (ShipInitialized == true)
             {
                 SendMessageToCore("11");
                 spacebanreloader();
@@ -1938,16 +2081,16 @@ namespace DLUTToolBox_V2
 
         async Task spacebanloader()
         {
-                RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
-                RegistryKey hkrm = hklm.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager", false);
-                if (hkrm.GetValue("ShippedWithReserves").ToString() == "1")
-                {
-                    ReserveShipping.IsChecked = true;
-                }
-                else
-                {
-                    ReserveShipping.IsChecked = false;
-                }
+            RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+            RegistryKey hkrm = hklm.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager", false);
+            if (hkrm.GetValue("ShippedWithReserves").ToString() == "1")
+            {
+                ReserveShipping.IsChecked = true;
+            }
+            else
+            {
+                ReserveShipping.IsChecked = false;
+            }
             ShipInitialized = true;
         }
 
@@ -1977,7 +2120,7 @@ namespace DLUTToolBox_V2
 
         private void TSX_Checked(object sender, RoutedEventArgs e)
         {
-            if(TSXInitialized==true)
+            if (TSXInitialized == true)
             {
                 SendMessageToCore("14");
                 TSXreloader();
@@ -1994,24 +2137,24 @@ namespace DLUTToolBox_V2
         }
         async Task TSXloader()
         {
-                RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
-                RegistryKey hksk = hklm.OpenSubKey(@"System\CurrentControlSet\Control\Session Manager\kernel", false);
-               if (hksk.GetValue("DisableTsx") == null)
+            RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+            RegistryKey hksk = hklm.OpenSubKey(@"System\CurrentControlSet\Control\Session Manager\kernel", false);
+            if (hksk.GetValue("DisableTsx") == null)
+            {
+                TSX.IsChecked = false;
+            }
+            else
+            {
+                if (hksk.GetValue("DisableTsx").ToString() == "1")
                 {
                     TSX.IsChecked = false;
                 }
                 else
                 {
-                    if (hksk.GetValue("DisableTsx").ToString() == "1")
-                    {
-                        TSX.IsChecked = false;
-                    }
-                    else
-                    {
-                        TSX.IsChecked = true;
-                    }
+                    TSX.IsChecked = true;
                 }
-               TSXInitialized=true;
+            }
+            TSXInitialized = true;
         }
 
         async Task TSXreloader()
@@ -2049,7 +2192,7 @@ namespace DLUTToolBox_V2
 
         private void VBS_Checked(object sender, RoutedEventArgs e)
         {
-            if(VBSInitialized==true)
+            if (VBSInitialized == true)
             {
                 SendMessageToCore("13");
                 VBSreloader();
@@ -2067,31 +2210,31 @@ namespace DLUTToolBox_V2
         }
         async Task VBSloader()
         {
-                RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
-                RegistryKey hkcd = hklm.OpenSubKey(@"System\CurrentControlSet\Control\DeviceGuard", false);
-                if (hkcd == null)
+            RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+            RegistryKey hkcd = hklm.OpenSubKey(@"System\CurrentControlSet\Control\DeviceGuard", false);
+            if (hkcd == null)
+            {
+                VBS.IsChecked = true;
+            }
+            else
+            {
+                if (hkcd.GetValue("EnableVirtualizationBasedSecurity") == null)
                 {
                     VBS.IsChecked = true;
                 }
                 else
                 {
-                    if (hkcd.GetValue("EnableVirtualizationBasedSecurity") == null)
+                    if (hkcd.GetValue("EnableVirtualizationBasedSecurity").ToString() == "1")
                     {
                         VBS.IsChecked = true;
                     }
                     else
                     {
-                        if (hkcd.GetValue("EnableVirtualizationBasedSecurity").ToString() == "1")
-                        {
-                            VBS.IsChecked = true;
-                        }
-                        else
-                        {
-                            VBS.IsChecked = false;
-                        }
+                        VBS.IsChecked = false;
                     }
                 }
-                VBSInitialized = true;
+            }
+            VBSInitialized = true;
         }
 
 
@@ -2125,10 +2268,10 @@ namespace DLUTToolBox_V2
         }
 
 
-        bool TimeLineInitialized=false;
+        bool TimeLineInitialized = false;
         private void TimeLine_Checked(object sender, RoutedEventArgs e)
         {
-            if(TimeLineInitialized==true)
+            if (TimeLineInitialized == true)
             {
                 SendMessageToCore("15");
                 TimeLinereloader();
@@ -2145,24 +2288,24 @@ namespace DLUTToolBox_V2
         }
         async Task TimeLineloader()
         {
-                RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
-                RegistryKey hksk = hklm.OpenSubKey(@"SOFTWARE\Policies\Microsoft\Windows\System", false);
-                if (hksk.GetValue("EnableActivityFeed") == null)
+            RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+            RegistryKey hksk = hklm.OpenSubKey(@"SOFTWARE\Policies\Microsoft\Windows\System", false);
+            if (hksk.GetValue("EnableActivityFeed") == null)
+            {
+                TimeLine.IsChecked = true;
+            }
+            else
+            {
+                if (hksk.GetValue("EnableActivityFeed").ToString() == "1")
                 {
                     TimeLine.IsChecked = true;
                 }
                 else
                 {
-                    if (hksk.GetValue("EnableActivityFeed").ToString() == "1")
-                    {
-                        TimeLine.IsChecked = true;
-                    }
-                    else
-                    {
-                        TimeLine.IsChecked = false;
-                    }
+                    TimeLine.IsChecked = false;
                 }
-                TimeLineInitialized = true;
+            }
+            TimeLineInitialized = true;
         }
 
 
@@ -2280,7 +2423,7 @@ namespace DLUTToolBox_V2
 
         private void OneDrive_Checked(object sender, RoutedEventArgs e)
         {
-            if(OneDriveInitialized==true)
+            if (OneDriveInitialized == true)
             {
                 SendMessageToCore("16");
                 onedrivereloader();
@@ -2298,22 +2441,22 @@ namespace DLUTToolBox_V2
 
         async Task onedriveloader()
         {
-                RegistryKey hkcr = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Registry64);
-                RegistryKey hkod = hkcr.OpenSubKey(@"CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}", false);
-                if (hkod == null)
-                {
-                    OneDrive.IsEnabled = false;
-                    return;
-                }
-                if (hkod.OpenSubKey(@"\ShellFolder") == null)
-                {
-                    OneDrive.IsChecked = false;
-                }
-                else
-                {
-                    OneDrive.IsChecked = true;
-                }
-                OneDriveInitialized = true;
+            RegistryKey hkcr = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Registry64);
+            RegistryKey hkod = hkcr.OpenSubKey(@"CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}", false);
+            if (hkod == null)
+            {
+                OneDrive.IsEnabled = false;
+                return;
+            }
+            if (hkod.OpenSubKey(@"\ShellFolder") == null)
+            {
+                OneDrive.IsChecked = false;
+            }
+            else
+            {
+                OneDrive.IsChecked = true;
+            }
+            OneDriveInitialized = true;
         }
         async Task onedrivereloader()
         {
@@ -2377,7 +2520,7 @@ namespace DLUTToolBox_V2
 
         private void HighResolution_Click(object sender, RoutedEventArgs e)
         {
-            if(HighResolutionLoaded==true)
+            if (HighResolutionLoaded == true)
             {
                 SendMessageToCore("25");
                 HighResolutionReloader();

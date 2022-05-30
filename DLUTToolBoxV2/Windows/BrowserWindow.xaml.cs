@@ -31,6 +31,7 @@ namespace DLUTToolBox_V2
         int specialhandlenum = 0;
         public BrowserWindow(string Url, string _FinalUri, string _rejump, int jumpwaittime, int _specialhandlenum, string _name)
         {
+            LogHelper.WriteInfoLog("调用内置浏览器窗口|目标名称：" + _name + "|使用URL：" + Url + "|使用处理逻辑代码编号：" + _specialhandlenum);
             InitializeComponent();
             this.TitleLabel.Content = _name;
             count = 0;
@@ -111,6 +112,7 @@ namespace DLUTToolBox_V2
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                LogHelper.WriteErrLog(ex);
             }
         }
         void resize()
@@ -211,6 +213,7 @@ namespace DLUTToolBox_V2
 
         async Task apilogin()
         {
+            LogHelper.WriteDebugLog("执行api登录注入");
             string jscode = "username.value='" + Properties.Settings.Default.Uid + "'";
             string jscode1 = "password.value='" + Properties.Settings.Default.UnionPassword + "'";
             await Web.CoreWebView2.ExecuteScriptAsync(jscode);
@@ -223,6 +226,7 @@ namespace DLUTToolBox_V2
 
         async Task login()
         {
+            LogHelper.WriteDebugLog("执行sso登录注入");
             string jscode = "un.value='" + Properties.Settings.Default.Uid + "'";
             string jscode1 = "pd.value='" + Properties.Settings.Default.UnionPassword + "'";
             string rm = "rememberName.checked='checked'";
@@ -958,7 +962,8 @@ namespace DLUTToolBox_V2
         private void Web_NavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
         {
             Console.WriteLine(e.Uri);
-            if(e.Uri.StartsWith("https://ibsbjstar.ccb.com.cn/CCBIS/B2CMainPlat"))
+            LogHelper.WriteInfoLog("页面|"+TitleLabel.Content+"|尝试打开URL:" + e.Uri.ToString());
+            if (e.Uri.StartsWith("https://ibsbjstar.ccb.com.cn/CCBIS/B2CMainPlat"))
             {
                 if(e.Uri.IndexOf("?CLIENTIP=&BRANCHID=") !=-1)
                 {

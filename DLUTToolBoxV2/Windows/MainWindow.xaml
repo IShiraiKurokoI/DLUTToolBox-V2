@@ -115,8 +115,9 @@
                         </hc:ButtonGroup>
                         <Button Content="复制工具箱配置串" Margin="50,5,0,0" DockPanel.Dock="Top" VerticalAlignment="Top" FontSize="24" Height="50" Width="235" x:Name="CopySettings" Click="CopySettings_Click"/>
                         <Button Content="应用工具箱配置串" Margin="50,10,0,0" DockPanel.Dock="Top" VerticalAlignment="Top" FontSize="24" Height="50" Width="235" x:Name="PasteSettings" Click="PasteSettings_Click"/>
-                        <Button Content="检查更新" Margin="50,40,0,0" DockPanel.Dock="Top" VerticalAlignment="Top" FontSize="24" Height="50" Width="235" x:Name="ManualUpdate" Click="ManualUpdate_Click"/>
+                        <Button Content="检查更新" Margin="50,10,0,0" DockPanel.Dock="Top" VerticalAlignment="Top" FontSize="24" Height="50" Width="235" x:Name="ManualUpdate" Click="ManualUpdate_Click"/>
                         <Button Content="清理缓存" Margin="50,10,0,0" DockPanel.Dock="Top" VerticalAlignment="Top" FontSize="24" Height="50" Width="235" x:Name="CleanFile" Click="CleanFile_Click"/>
+                        <Button Content="打开日志文件夹" Margin="50,10,0,0" DockPanel.Dock="Top" VerticalAlignment="Top" FontSize="24" Height="50" Width="235" x:Name="OpenLogFolder" Click="OpenLogFolder_Click"/>
                     </DockPanel>
                     <hc:TextBox DockPanel.Dock="Top" Background="Transparent" Height="80" HorizontalAlignment="Left" VerticalAlignment="Top" Width="500" Margin="80,-10,0,0" hc:InfoElement.Title="学工号" FontSize="16" ShowClearButton="True" BorderBrush="Black" TextChanged="Uid_TextChanged" x:Name="_Uid"/>
                     <hc:PasswordBox DockPanel.Dock="Top" Background="Transparent" Height="80" HorizontalAlignment="Left" VerticalAlignment="Top" Width="500" Margin="80,-4,0,0" hc:InfoElement.Title="统一身份验证密码" FontSize="16" ShowClearButton="True" ShowEyeButton="True" BorderBrush="Black" x:Name="UnionPassword" KeyUp="UnionPassword_KeyUp"/>

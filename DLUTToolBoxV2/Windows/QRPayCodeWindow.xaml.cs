@@ -28,20 +28,28 @@ namespace DLUTToolBox_V2
 
         void LoadUrlToQRCode(string url)
         {
-            QRCodeGenerator.ECCLevel eccLevel = (QRCodeGenerator.ECCLevel)(1);
-            using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+            try
             {
-                using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(url, eccLevel))
+                QRCodeGenerator.ECCLevel eccLevel = (QRCodeGenerator.ECCLevel)(1);
+                using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
                 {
-                    using (QRCode qrCode = new QRCode(qrCodeData))
+                    using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(url, eccLevel))
                     {
-                        System.Drawing.Bitmap bmp = qrCode.GetGraphic(20, System.Drawing.Color.Black, System.Drawing.Color.White,false);
-                        IntPtr hBitmap = bmp.GetHbitmap();
-                        System.Windows.Media.ImageSource WpfBitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                        QRCode.Source = WpfBitmap;
+                        using (QRCode qrCode = new QRCode(qrCodeData))
+                        {
+                            System.Drawing.Bitmap bmp = qrCode.GetGraphic(20, System.Drawing.Color.Black, System.Drawing.Color.White, false);
+                            IntPtr hBitmap = bmp.GetHbitmap();
+                            System.Windows.Media.ImageSource WpfBitmap = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                            QRCode.Source = WpfBitmap;
+                        }
                     }
                 }
             }
+            catch(Exception e)
+            {
+                LogHelper.WriteErrLog(e);
+            }
+
 
         }
 
