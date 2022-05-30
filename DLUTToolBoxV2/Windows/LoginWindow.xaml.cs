@@ -138,9 +138,11 @@ namespace DLUTToolBox_V2
 
         async Task PostExit(int time)
         {
+
             await Task.Delay(time);
             await Task.Run(() =>
             {
+                LogHelper.WriteInfoLog("-----------------------------------------程序退出-----------------------------------------");
                 Environment.Exit(0);
             });
         }
