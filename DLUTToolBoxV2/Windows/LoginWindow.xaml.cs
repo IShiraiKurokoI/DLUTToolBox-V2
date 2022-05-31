@@ -73,6 +73,7 @@ namespace DLUTToolBox_V2
         }
         async Task LoginProcedureStarter()
         {
+
             Task.Run(() =>
             {
                 if(!PreProcedureNeteorkCheck())
@@ -100,6 +101,7 @@ namespace DLUTToolBox_V2
         string info;
         bool PreProcedureNeteorkCheck()
         {
+            PostHide(3000);
             string checkcommand = "curl --connect-timeout 3 39.156.66.18";
             Process p1 = new Process();
             p1.StartInfo.FileName = "cmd.exe";
@@ -146,7 +148,14 @@ namespace DLUTToolBox_V2
                 Environment.Exit(0);
             });
         }
-
+        async Task PostHide(int time)
+        {
+            await Task.Delay(time);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                this.Visibility = Visibility.Hidden;
+            });
+        }
         void loadinfo()
         {
             if (PingIp("172.20.20.1"))

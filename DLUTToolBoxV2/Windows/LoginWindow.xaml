@@ -4,9 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DLUTToolBox_V2"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
-        Title="正在启动登录程序。。。。" Height="200" Width="500" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" x:Name="ThisWindow" Visibility="Hidden" ShowInTaskbar="False">
+        Title="正在启动登录程序" Height="80" Width="{Binding Source={x:Static SystemParameters.FullPrimaryScreenWidth}}" WindowStartupLocation="Manual" Loaded="Window_Loaded" x:Name="ThisWindow" Visibility="Visible" ShowInTaskbar="False" WindowStyle="None" AllowsTransparency="True" Topmost="True" Top="5" Left="0">
+    <Window.Background>
+        <SolidColorBrush Opacity="0" Color="AliceBlue"/>
+    </Window.Background>
     <Grid>
-        <Label Content="正在启动登录程序。。。。" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" BorderThickness="0"/>
+        <StackPanel Width="240" HorizontalAlignment="Center">
+            <StackPanel.Background>
+                <SolidColorBrush Opacity="0.2" Color="AliceBlue"/>
+            </StackPanel.Background>
+            <hc:LoadingCircle VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Label Content="正在启动登录程序" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" BorderThickness="0" Background="Transparent"/>
+        </StackPanel>
     </Grid>
 </Window>

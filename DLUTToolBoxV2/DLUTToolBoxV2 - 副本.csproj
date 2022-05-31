@@ -134,11 +134,9 @@
     <Compile Include="Windows\SmallPanelWindow.xaml.cs">
       <DependentUpon>SmallPanelWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Properties\DesignTimeResources.xaml"
-          Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Properties\DesignTimeResources.xaml">
       <SubType>Designer</SubType>
-      <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\BrowserWindow.xaml">
       <SubType>Designer</SubType>

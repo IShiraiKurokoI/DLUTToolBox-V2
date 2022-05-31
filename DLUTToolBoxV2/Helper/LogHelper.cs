@@ -6,7 +6,7 @@ namespace DLUTToolBox_V2
     public class LogHelper
     {
         public static NLog.Logger logger;
-        public static void InitLog4Net()
+        public static void InitNlog()
         {
             logger = NLog.LogManager.GetCurrentClassLogger();
         }

@@ -11,6 +11,7 @@ using HandyControl.Controls;
 using System.IO;
 using System.Security.Principal;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace DLUTToolBox_V2
 {
@@ -21,7 +22,7 @@ namespace DLUTToolBox_V2
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            LogHelper.InitLog4Net();
+            LogHelper.InitNlog();
             RegisterEvents();
             LogHelper.WriteInfoLog("----------------------------------程序启动，开始初始化----------------------------------");
             LogHelper.WriteInfoLog("日志初始化成功！");
@@ -32,7 +33,17 @@ namespace DLUTToolBox_V2
             {
                 if (args[0] == ("login"))
                 {
-                    new LoginWindow().Show();
+                    using (Mutex mutex = new Mutex(false, "DLUTToolBoxV2"))
+                    {
+                        if (mutex.WaitOne(0, false))
+                        {
+                            new LoginWindow().ShowDialog(); //conduct the login procedure
+                        }
+                        else
+                        {
+                            Environment.Exit(0);
+                        }
+                    }
                 }
                 if (args[0] == ("restart"))
                 {

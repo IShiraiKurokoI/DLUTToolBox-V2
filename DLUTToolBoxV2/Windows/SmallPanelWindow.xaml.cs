@@ -17,6 +17,8 @@ using HandyControl.Controls;
 using System.IO.Pipes;
 using System.Security.Principal;
 using System.Drawing;
+using HandyControl.Themes;
+using HandyControl.Data;
 
 namespace DLUTToolBox_V2
 {
@@ -30,6 +32,7 @@ namespace DLUTToolBox_V2
         public SmallPanelWindow(int i)
         {
             InitializeComponent();
+            ThemeManager.Current.SystemThemeChanged += OnSystemThemeChanged;
             SetBackgroundImage();
             switch(i)
             {
@@ -55,6 +58,11 @@ namespace DLUTToolBox_V2
                         break;
                     }
             }
+        }
+
+        private void OnSystemThemeChanged(object sender, FunctionEventArgs<ThemeManager.SystemTheme> e)
+        {
+            ThemeManager.Current.ApplicationTheme = e.Info.CurrentTheme;
         }
         private void SetBackgroundImage()
         {

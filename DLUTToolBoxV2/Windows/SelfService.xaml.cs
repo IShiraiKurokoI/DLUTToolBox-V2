@@ -16,6 +16,8 @@ using System.Diagnostics;
 using System.IO;
 using Microsoft.Web.WebView2.Core;
 using System.Drawing;
+using HandyControl.Themes;
+using HandyControl.Data;
 
 namespace DLUTToolBox_V2
 {
@@ -28,6 +30,7 @@ namespace DLUTToolBox_V2
         public SelfService()
         {
             InitializeComponent();
+            ThemeManager.Current.SystemThemeChanged += OnSystemThemeChanged;
             LogHelper.WriteInfoLog("打开自服务页面");
             SetBackgroundImage();
             if ((this.Width - 480) > 100)
@@ -43,6 +46,11 @@ namespace DLUTToolBox_V2
                 AddressBox.Visibility = Visibility.Hidden;
             }
             Web.DefaultBackgroundColor = System.Drawing.Color.Transparent;
+        }
+
+        private void OnSystemThemeChanged(object sender, FunctionEventArgs<ThemeManager.SystemTheme> e)
+        {
+            ThemeManager.Current.ApplicationTheme = e.Info.CurrentTheme;
         }
 
         private void SetBackgroundImage()

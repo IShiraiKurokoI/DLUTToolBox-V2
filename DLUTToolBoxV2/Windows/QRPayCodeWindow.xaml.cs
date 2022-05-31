@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using QRCoder;
+using HandyControl.Data;
+using HandyControl.Themes;
 
 namespace DLUTToolBox_V2
 {
@@ -23,7 +25,13 @@ namespace DLUTToolBox_V2
         public QRPayCodeWindow(string uri)
         {
             InitializeComponent();
+            ThemeManager.Current.SystemThemeChanged += OnSystemThemeChanged;
             LoadUrlToQRCode(uri);
+        }
+
+        private void OnSystemThemeChanged(object sender, FunctionEventArgs<ThemeManager.SystemTheme> e)
+        {
+            ThemeManager.Current.ApplicationTheme = e.Info.CurrentTheme;
         }
 
         void LoadUrlToQRCode(string url)

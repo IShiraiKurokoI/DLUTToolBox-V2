@@ -16,6 +16,8 @@ using Microsoft.Web.WebView2.Core;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
+using HandyControl.Themes;
+using HandyControl.Data;
 
 namespace DLUTToolBox_V2
 {
@@ -33,6 +35,7 @@ namespace DLUTToolBox_V2
         {
             LogHelper.WriteInfoLog("调用内置浏览器窗口|目标名称：" + _name + "|使用URL：" + Url + "|使用处理逻辑代码编号：" + _specialhandlenum);
             InitializeComponent();
+            ThemeManager.Current.SystemThemeChanged += OnSystemThemeChanged;
             this.TitleLabel.Content = _name;
             count = 0;
             time = jumpwaittime;
@@ -76,6 +79,10 @@ namespace DLUTToolBox_V2
             SetBackgroundImage();
         }
 
+        private void OnSystemThemeChanged(object sender, FunctionEventArgs<ThemeManager.SystemTheme> e)
+        {
+            ThemeManager.Current.ApplicationTheme = e.Info.CurrentTheme;
+        }
         private void SetBackgroundImage()
         {
             if (Properties.Settings.Default.BackgroundImageUrl != "")

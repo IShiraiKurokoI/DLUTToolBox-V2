@@ -27,6 +27,9 @@ using System.Threading;
 using Newtonsoft.Json;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using HandyControl.Themes;
+using HandyControl.Data;
+
 
 namespace DLUTToolBox_V2
 {
@@ -138,6 +141,7 @@ namespace DLUTToolBox_V2
         public MainWindow()
         {
             InitializeComponent();
+            ThemeManager.Current.SystemThemeChanged += OnSystemThemeChanged;
             this.TitleLabel.Content = "DLUTToolBox V2-信息总览";
             Overview.Visibility = Visibility.Visible;
             try
@@ -154,6 +158,12 @@ namespace DLUTToolBox_V2
                 LogHelper.WriteErrLog(e);
             }
         }
+
+        private void OnSystemThemeChanged(object sender, FunctionEventArgs<ThemeManager.SystemTheme> e)
+        {
+            ThemeManager.Current.ApplicationTheme = e.Info.CurrentTheme;
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Growl.ClearGlobal();
