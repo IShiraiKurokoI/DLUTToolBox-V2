@@ -32,6 +32,7 @@ namespace DLUTToolBox_V2
             InitializeComponent();
             ThemeManager.Current.SystemThemeChanged += OnSystemThemeChanged;
             LogHelper.WriteInfoLog("打开自服务页面");
+            this.Title = "开发区校区校园网自服务";
             SetBackgroundImage();
             if ((this.Width - 480) > 100)
             {

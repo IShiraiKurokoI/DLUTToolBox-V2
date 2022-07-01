@@ -39,12 +39,14 @@ namespace DLUTToolBox_V2
                 case 0:
                     {
                         this.TitleLabel.Content = "Adobe下载指引";
+                        this.Title = "Adobe下载指引";
                         Adobe.Visibility = Visibility.Visible;
                         break;
                     }
                 case 1:
                     {
                         this.TitleLabel.Content = "文件夹背景调整";
+                        this.Title = "文件夹背景调整";
                         BG = true;
                         Folderbg.Visibility = Visibility.Visible;
                         break;
@@ -52,6 +54,7 @@ namespace DLUTToolBox_V2
                 case 2:
                     {
                         this.TitleLabel.Content = "文件夹背景调整";
+                        this.Title = "文件夹背景调整";
                         BG = true;
                         Folderbg.Visibility = Visibility.Visible;
                         Restarted = true;

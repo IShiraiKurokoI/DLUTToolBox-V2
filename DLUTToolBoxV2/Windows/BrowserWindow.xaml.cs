@@ -37,6 +37,7 @@ namespace DLUTToolBox_V2
             InitializeComponent();
             ThemeManager.Current.SystemThemeChanged += OnSystemThemeChanged;
             this.TitleLabel.Content = _name;
+            this.Title = _name;
             count = 0;
             time = jumpwaittime;
             Web.Source = new Uri(Url);
