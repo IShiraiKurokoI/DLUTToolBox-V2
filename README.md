@@ -1,7 +1,7 @@
 # DLUTToolBox-V2
 大工工具箱全新WPF版本
 全新UI，全新体验
-同时带来大量修复与性能改进
+同时带来大量修复与性能改进<br/>
 信息总览
 ![image](https://user-images.githubusercontent.com/73374735/170491264-3e3f45c4-e919-4f45-aa20-687cb2218f36.png)
 网络工具
