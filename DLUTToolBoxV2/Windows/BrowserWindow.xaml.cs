@@ -148,6 +148,7 @@ namespace DLUTToolBox_V2
         CoreWebView2DownloadOperation downloadOperation;
         private void Web_CoreWebView2InitializationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs e)
         {
+            Web.CoreWebView2.CookieManager.DeleteAllCookies();
             Web.CoreWebView2.Settings.AreDevToolsEnabled = false;
             Web.CoreWebView2.Settings.AreHostObjectsAllowed = false;
             Web.CoreWebView2.Settings.IsStatusBarEnabled = false;
@@ -425,13 +426,6 @@ namespace DLUTToolBox_V2
                         }
                         break;
                     }
-                case 10:
-                    {
-                        Browser_Background.Content = "";
-                        LoadingCircle.Visibility = Visibility.Hidden;
-                        Web.Visibility = Visibility.Visible;
-                        break;
-                    }
                 case 11:
                     {
                         switch (count)
@@ -472,199 +466,6 @@ namespace DLUTToolBox_V2
                         }
                         break;
                     }
-                case 12:
-                    {
-                        switch (count)
-                        {
-                            case 0:
-                                {
-                                    if (Web.Source.AbsoluteUri == "https://webvpn.dlut.edu.cn/login")
-                                    {
-                                        string jsjump = "window.location.href='/login?cas_login=true'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        webvpn = true;
-                                    }
-                                    else
-                                    {
-                                        string jsjump = "window.location.href='http://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421f7b9569d2936695e790c88b8991b203a18454272/index.html'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        Browser_Background.Content = "";
-                                        LoadingCircle.Visibility = Visibility.Hidden;
-                                        Web.Visibility = Visibility.Visible;
-                                    }
-                                    break;
-                                }
-                            case 1:
-                                {
-                                    if (webvpn == true)
-                                    {
-                                        string jsjump = "window.location.href='http://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421f7b9569d2936695e790c88b8991b203a18454272/index.html'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                    }
-                                    Browser_Background.Content = "";
-                                    LoadingCircle.Visibility = Visibility.Hidden;
-                                    Web.Visibility = Visibility.Visible;
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-                        break;
-                    }
-                case 13:
-                    {
-                        switch (count)
-                        {
-                            case 0:
-                                {
-                                    if (Web.Source.AbsoluteUri == "https://webvpn.dlut.edu.cn/login")
-                                    {
-                                        string jsjump = "window.location.href='/login?cas_login=true'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        webvpn = true;
-                                    }
-                                    else
-                                    {
-                                        string jsjump = "window.location.href='http://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421e7e056d22b396a1e7a049cb8d65027204e7199/sjkdhejlbyAtoZ/ALL.htm'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        Browser_Background.Content = "";
-                                        LoadingCircle.Visibility = Visibility.Hidden;
-                                        Web.Visibility = Visibility.Visible;
-                                    }
-                                    break;
-                                }
-                            case 1:
-                                {
-                                    if (webvpn == true)
-                                    {
-                                        string jsjump = "window.location.href='http://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421e7e056d22b396a1e7a049cb8d65027204e7199/sjkdhejlbyAtoZ/ALL.htm'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                    }
-                                    Browser_Background.Content = "";
-                                    LoadingCircle.Visibility = Visibility.Hidden;
-                                    Web.Visibility = Visibility.Visible;
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-                        break;
-                    }
-                case 14:
-                    {
-                        switch (count)
-                        {
-                            case 0:
-                                {
-                                    if (Web.Source.AbsoluteUri == "https://webvpn.dlut.edu.cn/login")
-                                    {
-                                        string jsjump = "window.location.href='/login?cas_login=true'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        webvpn = true;
-                                    }
-                                    else
-                                    {
-                                        Browser_Background.Content = "";
-                                        LoadingCircle.Visibility = Visibility.Hidden;
-                                        Web.Visibility = Visibility.Visible;
-                                    }
-                                    break;
-                                }
-                            case 1:
-                                {
-                                    Browser_Background.Content = "";
-                                    LoadingCircle.Visibility = Visibility.Hidden;
-                                    Web.Visibility = Visibility.Visible;
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-                        break;
-                    }
-                case 15:
-                    {
-                        switch (count)
-                        {
-                            case 0:
-                                {
-                                    if (Web.Source.AbsoluteUri.IndexOf("https://webvpn.dlut.edu.cn/login") != -1)
-                                    {
-                                        string jsjump = "window.location.href='/login?cas_login=true'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        webvpn = true;
-                                    }
-                                    else
-                                    {
-                                        string jsjump = "window.location.href='http://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421f9fa4e93247e6c5c6b1cc7a99c406d3642/sso/dlut'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        Browser_Background.Content = "";
-                                        LoadingCircle.Visibility = Visibility.Hidden;
-                                        Web.Visibility = Visibility.Visible;
-                                    }
-                                    break;
-                                }
-                            case 1:
-                                {
-                                    if (webvpn == true)
-                                    {
-                                        login();
-                                    }
-                                    Browser_Background.Content = "";
-                                    LoadingCircle.Visibility = Visibility.Hidden;
-                                    Web.Visibility = Visibility.Visible;
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-                        break;
-                    }
-                case 16:
-                    {
-                        switch (count)
-                        {
-                            case 0:
-                                {
-                                    if (Web.Source.AbsoluteUri.IndexOf("https://webvpn.dlut.edu.cn/login") != -1)
-                                    {
-                                        string jsjump = "window.location.href='/login?cas_login=true'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        webvpn = true;
-                                    }
-                                    else
-                                    {
-                                        string jsjump = "window.location.href='http://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421f4e2558f267e6c5c6b1cc7a99c406d36b7/cas'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        Browser_Background.Content = "";
-                                        LoadingCircle.Visibility = Visibility.Hidden;
-                                        Web.Visibility = Visibility.Visible;
-                                    }
-                                    break;
-                                }
-                            case 1:
-                                {
-                                    if (webvpn == true)
-                                    {
-                                        login();
-                                    }
-                                    Browser_Background.Content = "";
-                                    LoadingCircle.Visibility = Visibility.Hidden;
-                                    Web.Visibility = Visibility.Visible;
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-                        break;
-                    }
-                case 17:
-                    {
-                        Browser_Background.Content = "";
-                        LoadingCircle.Visibility = Visibility.Hidden;
-                        Web.Visibility = Visibility.Visible;
-                        break;
-                    }
                 case 18:
                     {
                         switch (count)
@@ -694,156 +495,30 @@ namespace DLUTToolBox_V2
                         }
                         break;
                     }
+                case 10:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                case 17:
                 case 19:
-                    {
-                        switch (count)
-                        {
-                            case 0:
-                                {
-                                    Browser_Background.Content = "";
-                                    LoadingCircle.Visibility = Visibility.Hidden;
-                                    Web.Visibility = Visibility.Visible;
-                                    break;
-                                }
-                            case 1:
-                                {
-                                    Browser_Background.Content = "";
-                                    LoadingCircle.Visibility = Visibility.Hidden;
-                                    Web.Visibility = Visibility.Visible;
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-                        break;
-                    }
                 case 20:
-                    {
-                        switch (count)
-                        {
-                            case 0:
-                                {
-                                    if (Web.Source.AbsoluteUri.IndexOf("https://webvpn.dlut.edu.cn/login") != -1)
-                                    {
-                                        string jsjump = "window.location.href='/login?cas_login=true'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        webvpn = true;
-                                    }
-                                    else
-                                    {
-                                        string jsjump = "window.location.href='https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421f5f4408e23206949730d87b8d6512f209640763a21f75b0c/'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        Browser_Background.Content = "";
-                                        LoadingCircle.Visibility = Visibility.Hidden;
-                                        Web.Visibility = Visibility.Visible;
-                                    }
-                                    break;
-                                }
-                            case 1:
-                                {
-                                    if (webvpn == true)
-                                    {
-                                        login();
-                                    }
-                                    Browser_Background.Content = "";
-                                    LoadingCircle.Visibility = Visibility.Hidden;
-                                    Web.Visibility = Visibility.Visible;
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-                        break;
-                    }
                 case 21:
-                    {
-                        switch (count)
-                        {
-                            case 0:
-                                {
-                                    if (Web.Source.AbsoluteUri.IndexOf("https://webvpn.dlut.edu.cn/login") != -1)
-                                    {
-                                        string jsjump = "window.location.href='/login?cas_login=true'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        webvpn = true;
-                                    }
-                                    else
-                                    {
-                                        string jsjump = "window.location.href='https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421f5f4408e23206949730d87b8d6512f209640763a21f75b0c/#/project/pay/eleCostOfDlutPay'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        Browser_Background.Content = "";
-                                        LoadingCircle.Visibility = Visibility.Hidden;
-                                        Web.Visibility = Visibility.Visible;
-                                    }
-                                    break;
-                                }
-                            case 1:
-                                {
-                                    if (webvpn == true)
-                                    {
-                                        login();
-                                    }
-                                    Browser_Background.Content = "";
-                                    LoadingCircle.Visibility = Visibility.Hidden;
-                                    Web.Visibility = Visibility.Visible;
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-                        break;
-                    }
                 case 22:
-                    {
-                        switch (count)
-                        {
-                            case 0:
-                                {
-                                    if (Web.Source.AbsoluteUri.IndexOf("https://webvpn.dlut.edu.cn/login") != -1)
-                                    {
-                                        string jsjump = "window.location.href='/login?cas_login=true'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        webvpn = true;
-                                    }
-                                    else
-                                    {
-                                        string jsjump = "window.location.href='https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421f5f4408e23206949730d87b8d6512f209640763a21f75b0c/#/project/pay/netCostOfSlPay'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        Browser_Background.Content = "";
-                                        LoadingCircle.Visibility = Visibility.Hidden;
-                                        Web.Visibility = Visibility.Visible;
-                                    }
-                                    break;
-                                }
-                            case 1:
-                                {
-                                    if (webvpn == true)
-                                    {
-                                        login();
-                                    }
-                                    Browser_Background.Content = "";
-                                    LoadingCircle.Visibility = Visibility.Hidden;
-                                    Web.Visibility = Visibility.Visible;
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-                        break;
-                    }
                 case 23:
                     {
-                        switch (count)
+                        if (!Web.Source.AbsoluteUri.StartsWith("https://api.m.dlut.edu.cn/login?client_id="))
                         {
-                            case 0:
-                                {
-                                    Browser_Background.Content = "";
-                                    LoadingCircle.Visibility = Visibility.Hidden;
-                                    Web.Visibility = Visibility.Visible;
-                                    break;
-                                }
-                            default:
-                                break;
+                            Browser_Background.Content = "";
+                            LoadingCircle.Visibility = Visibility.Hidden;
+                            Web.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            //Browser_Background.Content = "加载中，请稍后喵";
+                            LoadingCircle.Visibility = Visibility.Visible;
+                            Web.Visibility = Visibility.Hidden;
                         }
                         break;
                     }
@@ -964,7 +639,7 @@ namespace DLUTToolBox_V2
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Web.Dispose();
+
         }
 
         private void Web_NavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)

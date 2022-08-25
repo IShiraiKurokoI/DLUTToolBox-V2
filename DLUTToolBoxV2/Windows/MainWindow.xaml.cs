@@ -1259,7 +1259,7 @@ namespace DLUTToolBox_V2
                 ClassTable.Height = 0;
                 TableCirlcle.Visibility = Visibility.Visible;
                 ClassTable.Source = new Uri("https://api.m.dlut.edu.cn/login?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2fcourseschedule&response_type=code");
-                Eleinfo.Source = new Uri("https://api.m.dlut.edu.cn/oauth/authorize?client_id=19b32196decf419a&redirect_uri=https%3A%2F%2Fcard.m.dlut.edu.cn%2Fhomerj%2FopenRjOAuthPage&response_type=code&scope=base_api&state=weishao");
+                Eleinfo.Source = new Uri("https://api.m.dlut.edu.cn/login?client_id=19b32196decf419a&redirect_uri=https%3A%2F%2Fcard.m.dlut.edu.cn%2Fhomerj%2FopenRjOAuthPage&response_type=code&scope=base_api&state=weishao");
                 WorkSpace_Web.Source = new Uri("https://sso.dlut.edu.cn/cas/login?service=https%3A%2F%2Fehall.dlut.edu.cn%2Ffp%2Fview%3Fm%3Dfp#act=fp/formHome");
             }
             else
@@ -1463,7 +1463,7 @@ namespace DLUTToolBox_V2
                 else
                 {
                     Hide();
-                    new BrowserWindow("https://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421e0f85388263c2654721d9de29d51367b3449/sso/sso_zzxt.jsp", "", "", 0, 15, "网络自助").ShowDialog();
+                    new BrowserWindow("https://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421e0f85388263c2654721d9de29d51367b3449/sso/sso_zzxt.jsp?filter=app&from=rj", "", "", 0, 15, "网络自助").ShowDialog();
                     Show();
                 }
             }
@@ -1472,7 +1472,7 @@ namespace DLUTToolBox_V2
         private void Network_Charge_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421f5f4408e23206949730d87b8d6512f209640763a21f75b0c/", "", "", 0, 22, "网费充值").ShowDialog();
+            new BrowserWindow("https://sso.dlut.edu.cn/cas/login?from=rj&service=https%3A%2F%2Fsso.dlut.edu.cn%2Fcas%2Flogin%3Fservice%3Dhttps%253A%252F%252Fehall.dlut.edu.cn%252Ffp%252FvisitService%253Fservice_id%253D2ac10b19-e8af-43a7-bded-a9da71ea31bc", "", "", 0, 22, "网费充值").ShowDialog();
             this.Show();
         }
         private void Network_RefreshDNS_Click(object sender, RoutedEventArgs e)
@@ -1643,7 +1643,7 @@ namespace DLUTToolBox_V2
         private void Electricity_Charge_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421f5f4408e23206949730d87b8d6512f209640763a21f75b0c/#/project/pay/eleCostOfDlutPay", "", "", 0, 21, "电费充值").ShowDialog();
+            new BrowserWindow("https://sso.dlut.edu.cn/cas/login?from=rj&service=https%3A%2F%2Fsso.dlut.edu.cn%2Fcas%2Flogin%3Fservice%3Dhttps%253A%252F%252Fehall.dlut.edu.cn%252Ffp%252FvisitService%253Fservice_id%253Dca2b52e6-1145-4b63-9ea9-e443b376da0d", "", "", 0, 21, "电费充值").ShowDialog();
             this.Show();
         }
 
@@ -1674,56 +1674,56 @@ namespace DLUTToolBox_V2
         private void Exam_PublicNotice_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://api.m.dlut.edu.cn/oauth/authorize?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2fnotice&response_type=code&scope=base_api&state=dlut", "", "", 0, 23, "公共通知（学院通知）").ShowDialog();
+            new BrowserWindow("https://api.m.dlut.edu.cn/login?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2fnotice&response_type=code&scope=base_api&state=dlut", "", "", 0, 23, "公共通知（学院通知）").ShowDialog();
             this.Show();
         }
 
         private void Exam_Calender_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://api.m.dlut.edu.cn/oauth/authorize?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2fschcalendar&response_type=code&scope=base_api&state=dlut", "", "", 0, 23, "学校校历").ShowDialog();
+            new BrowserWindow("https://api.m.dlut.edu.cn/login?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2fschcalendar&response_type=code&scope=base_api&state=dlut", "", "", 0, 23, "学校校历").ShowDialog();
             this.Show();
         }
 
         private void Exam_LessionSelect_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login", "", "", 0, 7, "选课系统").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login?filter=app&from=rj", "", "", 0, 7, "选课系统").ShowDialog();
             this.Show();
         }
 
         private void Exam_Info_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login", "", "", 0, 3, "考试信息").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login?filter=app&from=rj", "", "", 0, 3, "考试信息").ShowDialog();
             this.Show();
         }
 
         private void Exam_MainPage_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login", "", "", 0, 0, "教务主页").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login?filter=app&from=rj", "", "", 0, 0, "教务主页").ShowDialog();
             this.Show();
         }
 
         private void Exam_Score_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login", "", "", 0, 5, "成绩信息").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login?filter=app&from=rj", "", "", 0, 5, "成绩信息").ShowDialog();
             this.Show();
         }
 
         private void Exam_Delay_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login", "", "", 0, 4, "缓考申请").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login?filter=app&from=rj", "", "", 0, 4, "缓考申请").ShowDialog();
             this.Show();
         }
 
         private void Exam_Evaluate_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login", "", "", 0, 6, "评教系统-总结性评教").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login?filter=app&from=rj", "", "", 0, 6, "评教系统-总结性评教").ShowDialog();
             this.Show();
         }
 
@@ -1746,21 +1746,21 @@ namespace DLUTToolBox_V2
         private void Study_Table_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login", "", "", 0, 8, "我的课表").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login?filter=app&from=rj", "", "", 0, 8, "我的课表").ShowDialog();
             this.Show();
         }
 
         private void Study_ClassTable_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login", "", "", 0, 9, "班级课表").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login?filter=app&from=rj", "", "", 0, 9, "班级课表").ShowDialog();
             this.Show();
         }
 
         private void Study_Plan_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login", "", "", 0, 2, "培养方案").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login?filter=app&from=rj", "", "", 0, 2, "培养方案").ShowDialog();
             this.Show();
         }
 
@@ -1774,21 +1774,21 @@ namespace DLUTToolBox_V2
         private void Study_Notice_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://api.m.dlut.edu.cn/oauth/authorize?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2fmemo&response_type=code&scope=base_api&state=dlut", "", "", 0, 23, "校内通知").ShowDialog();
+            new BrowserWindow("https://api.m.dlut.edu.cn/login?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2fmemo&response_type=code&scope=base_api&state=dlut", "", "", 0, 23, "校内通知").ShowDialog();
             this.Show();
         }
 
         private void Study_Lession_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login", "", "", 0, 1, "开课信息").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421faef4690693464456a468ca88d1b203b/student/ucas-sso/login?filter=app&from=rj", "", "", 0, 1, "开课信息").ShowDialog();
             this.Show();
         }
 
         private void Study_Room_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://api.m.dlut.edu.cn/oauth/authorize?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2femptyclassroom&response_type=code&scope=base_api&state=dlut", "", "", 0, 23, "空闲教室列表").ShowDialog();
+            new BrowserWindow("https://api.m.dlut.edu.cn/login?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2femptyclassroom&response_type=code&scope=base_api&state=dlut", "", "", 0, 23, "空闲教室列表").ShowDialog();
             this.Show();
         }
 
@@ -1889,35 +1889,35 @@ namespace DLUTToolBox_V2
         private void Library_Zhiwang_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421f5e7549e6933665b774687a98c/kns/brief/result.aspx", "", "", 0, 10, "知网搜索").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421f5e7549e6933665b774687a98c/kns/brief/result.aspx?filter=app&from=rj", "", "", 0, 10, "知网搜索").ShowDialog();
             this.Show();
         }
 
         private void Library_WanFang_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421f3ff449f2c7e7f51700e88a29f5122218bc962a70c9d1272/checklogin/?service=https%3A%2F%2Fcheck.wanfangdata.com.cn%2Fmd", "", "", 0, 11, "万方查重").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421f3ff449f2c7e7f51700e88a29f5122218bc962a70c9d1272/checklogin/?service=https%3A%2F%2Fcheck.wanfangdata.com.cn%2Fmd&filter=app&from=rj", "", "", 0, 11, "万方查重").ShowDialog();
             this.Show();
         }
 
         private void Library_Dupilicate_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421f3ff449f2c7e7f51700e88a29f5122218bc962a70c9d1272/checklogin/?service=https%3A%2F%2Fcheck.wanfangdata.com.cn%2Fmd", "", "", 0, 12, "万方搜索").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421f7b9569d2936695e790c88b8991b203a18454272/index.html?filter=app&from=rj", "", "", 0, 12, "万方搜索").ShowDialog();
             this.Show();
         }
 
         private void Library_Resource_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421e7e056d22b396a1e7a049cb8d65027204e7199/sjkdhejlbyAtoZ/ALL.htm", "", "", 0, 13, "图书馆资源列表").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421e7e056d22b396a1e7a049cb8d65027204e7199/sjkdhejlbyAtoZ/ALL.htm?filter=app&from=rj", "", "", 0, 13, "图书馆资源列表").ShowDialog();
             this.Show();
         }
 
         private void Library_Book_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://api.m.dlut.edu.cn/oauth/authorize?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2flibrary&response_type=code&scope=base_api&state=dlut", "", "", 0, 23, "图书借阅").ShowDialog();
+            new BrowserWindow("https://api.m.dlut.edu.cn/login?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2flibrary&response_type=code&scope=base_api&state=dlut", "", "", 0, 23, "图书借阅").ShowDialog();
             this.Show();
         }
 
@@ -1933,7 +1933,7 @@ namespace DLUTToolBox_V2
         private void Other_Pan_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421e0f64fd2233c7d44300d8db9d6562d/cas", "", "", 0, 17, "大工网盘").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421e0f64fd2233c7d44300d8db9d6562d/cas?filter=app&from=rj", "", "", 0, 17, "大工网盘").ShowDialog();
             this.Show();
         }
 
@@ -1947,28 +1947,28 @@ namespace DLUTToolBox_V2
         private void Other_Work_Click(object sender, RoutedEventArgs e)
         {
             Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421f4e2558f267e6c5c6b1cc7a99c406d36b7/cas", "", "", 0, 16, "学工系统").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421f4e2558f267e6c5c6b1cc7a99c406d36b7/cas?filter=app&from=rj", "", "", 0, 16, "学工系统").ShowDialog();
             Show();
         }
 
         private void Other_Mooc_Click(object sender, RoutedEventArgs e)
         {
             Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421f9fa4e93247e6c5c6b1cc7a99c406d3642/sso/dlut", "", "", 0, 15, "大工慕课").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421f9fa4e93247e6c5c6b1cc7a99c406d3642/sso/dlut?filter=app&from=rj", "", "", 0, 15, "大工慕课").ShowDialog();
             Show();
         }
 
         private void Other_Charge_Click(object sender, RoutedEventArgs e)
         {
             Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421f5f4408e23206949730d87b8d6512f209640763a21f75b0c/#/project/pay/eleCostOfDlutPay", "", "", 0, 20, "校园缴费平台").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421f5f4408e23206949730d87b8d6512f209640763a21f75b0c/?filter=app&from=rj", "", "", 0, 20, "校园缴费平台").ShowDialog();
             Show();
         }
 
         private void Other_Network_Click(object sender, RoutedEventArgs e)
         {
             Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421e0f85388263c2654721d9de29d51367b3449/sso/sso_zzxt.jsp", "", "", 0, 14, "网络自助").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421e0f85388263c2654721d9de29d51367b3449/sso/sso_zzxt.jsp?filter=app&from=rj", "", "", 0, 14, "网络自助").ShowDialog();
             Show();
         }
 
@@ -1989,7 +1989,7 @@ namespace DLUTToolBox_V2
         private void Other_imiganai_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://api.m.dlut.edu.cn/oauth/authorize?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2fcomplainpraise&response_type=code&scope=base_api&state=dlut", "", "", 0, 23, "吐槽反馈").ShowDialog();
+            new BrowserWindow("https://api.m.dlut.edu.cn/login?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2fcomplainpraise&response_type=code&scope=base_api&state=dlut", "", "", 0, 23, "吐槽反馈").ShowDialog();
             this.Show();
         }
 
