@@ -231,6 +231,10 @@ namespace DLUTToolBox_V2
                         WeatherBar.Source = new Uri("http://www.weather.com.cn/");
                     }
                 }
+                else
+                {
+                    checkforupdate();
+                }
                 if (datawarn == true)
                 {
                     Overview_NetworkInfo.Content = Overview_NetworkInfo.Content + "\n|本月流量使用已超过90G，请留意！！|\n";
