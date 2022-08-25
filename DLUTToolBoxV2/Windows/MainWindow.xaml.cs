@@ -1040,7 +1040,7 @@ namespace DLUTToolBox_V2
             {
                 try
                 {
-                    string updmessage = GetWebRequest("https://api.github.com/repos/MuoRanLY/DLUTToolBox-V2/releases/latest", Encoding.ASCII);
+                    string updmessage = GetWebRequest("https://api.github.com/repos/IShiraiKurokoI/DLUTToolBox-V2/releases/latest", Encoding.ASCII);
                     GithubLatest latest = JsonConvert.DeserializeObject<GithubLatest>(updmessage);
                     string versionname = latest.name;
                     string size = formatdataflow(latest.assets[0].size.ToString());
