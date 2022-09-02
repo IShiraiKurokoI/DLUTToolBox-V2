@@ -35,6 +35,10 @@ namespace DLUTToolBox_V2
         {
             LogHelper.WriteInfoLog("调用内置浏览器窗口|目标名称：" + _name + "|使用URL：" + Url + "|使用处理逻辑代码编号：" + _specialhandlenum);
             InitializeComponent();
+            Web.CreationProperties = new Microsoft.Web.WebView2.Wpf.CoreWebView2CreationProperties
+            {
+                UserDataFolder = "UDFS\\BrowserViewUDF"
+            };
             ThemeManager.Current.SystemThemeChanged += OnSystemThemeChanged;
             this.TitleLabel.Content = _name;
             this.Title = _name;
@@ -227,9 +231,7 @@ namespace DLUTToolBox_V2
             string jscode1 = "password.value='" + Properties.Settings.Default.UnionPassword + "'";
             await Web.CoreWebView2.ExecuteScriptAsync(jscode);
             await Web.CoreWebView2.ExecuteScriptAsync(jscode1);
-            string jsenable = "btnpc.disabled=''";
-            await Web.CoreWebView2.ExecuteScriptAsync(jsenable);
-            string jscode2 = "btnpc.click()";
+            string jscode2 = "$(\"#formpc\").submit()";
             await Web.CoreWebView2.ExecuteScriptAsync(jscode2);
         }
 
@@ -271,13 +273,13 @@ namespace DLUTToolBox_V2
                 }
                 return;
             }
-            if (Web.Source.AbsoluteUri == "https://webvpn.dlut.edu.cn/login")
-            {
-                string jsjump = "window.location.href='/login?cas_login=true'";
-                Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                webvpn = true;
-                return;
-            }
+            //if (Web.Source.AbsoluteUri == "https://webvpn.dlut.edu.cn/login")
+            //{
+            //    string jsjump = "window.location.href='/login?cas_login=true'";
+            //    Web.CoreWebView2.ExecuteScriptAsync(jsjump);
+            //    webvpn = true;
+            //    return;
+            //}
             if (Web.Source.AbsoluteUri.IndexOf("https://sso.dlut.edu.cn/cas/login?service=") != -1)
             {
                 login();

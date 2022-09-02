@@ -141,6 +141,26 @@ namespace DLUTToolBox_V2
         public MainWindow()
         {
             InitializeComponent();
+            ClassTable.CreationProperties = new Microsoft.Web.WebView2.Wpf.CoreWebView2CreationProperties
+            {
+                UserDataFolder = "UDFS\\ClassTableUDF"
+            };
+            ClassTable.Source = new Uri("https://api.m.dlut.edu.cn/login?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2fcourseschedule&response_type=code");
+            Eleinfo.CreationProperties = new Microsoft.Web.WebView2.Wpf.CoreWebView2CreationProperties
+            {
+                UserDataFolder = "UDFS\\EleinfoUDF"
+            };
+            Eleinfo.Source = new Uri("https://api.m.dlut.edu.cn/oauth/authorize?client_id=19b32196decf419a&redirect_uri=https%3A%2F%2Fcard.m.dlut.edu.cn%2Fhomerj%2FopenRjOAuthPage&response_type=code");
+            WorkSpace_Web.CreationProperties = new Microsoft.Web.WebView2.Wpf.CoreWebView2CreationProperties
+            {
+                UserDataFolder = "UDFS\\EHallUDF"
+            };
+            WorkSpace_Web.Source = new Uri("https://sso.dlut.edu.cn/cas/login?service=https%3A%2F%2Fehall.dlut.edu.cn%2Ffp%2Fview%3Fm%3Dfp#act=fp/formHome");
+            WeatherBar.CreationProperties = new Microsoft.Web.WebView2.Wpf.CoreWebView2CreationProperties
+            {
+                UserDataFolder = "UDFS\\WeatherUDF"
+            };
+            WeatherBar.Source = new Uri("http://www.weather.com.cn/");
             ThemeManager.Current.SystemThemeChanged += OnSystemThemeChanged;
             this.TitleLabel.Content = "DLUTToolBox V2-信息总览";
             Overview.Visibility = Visibility.Visible;
@@ -963,7 +983,30 @@ namespace DLUTToolBox_V2
             {
                 Directory.Delete(System.IO.Path.GetTempPath() + @".\NewVersion\", true);
             }
+            CoreWebView2Profile webViewProfile = ClassTable.CoreWebView2.Profile;
+            webViewProfile.ClearBrowsingDataAsync(CoreWebView2BrowsingDataKinds.AllProfile);
+            CoreWebView2Profile webViewProfile1 = WorkSpace_Web.CoreWebView2.Profile;
+            webViewProfile1.ClearBrowsingDataAsync(CoreWebView2BrowsingDataKinds.AllProfile);
+            CoreWebView2Profile webViewProfile2 = Eleinfo.CoreWebView2.Profile;
+            webViewProfile2.ClearBrowsingDataAsync(CoreWebView2BrowsingDataKinds.AllProfile);
+            CoreWebView2Profile webViewProfile3 = WeatherBar.CoreWebView2.Profile;
+            webViewProfile3.ClearBrowsingDataAsync(CoreWebView2BrowsingDataKinds.AllProfile);
+            DeleteDirectory(System.Environment.CurrentDirectory + "\\UDFS\\BrowserViewUDF");
             Growl.SuccessGlobal("清理完成！");
+        }
+
+        void DeleteDirectory(string path)
+        {
+            DirectoryInfo dir = new DirectoryInfo(path);
+            if (dir.Exists)
+            {
+                DirectoryInfo[] childs = dir.GetDirectories();
+                foreach (DirectoryInfo child in childs)
+                {
+                    child.Delete(true);
+                }
+                dir.Delete(true);
+            }
         }
 
         private void OpenLogFolder_Click(object sender, RoutedEventArgs e)
