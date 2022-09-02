@@ -1165,12 +1165,7 @@ namespace DLUTToolBox_V2
                 Directory.Delete(System.IO.Path.GetTempPath() + @".\NewVersion\", true);
             }
             Growl.InfoGlobal("开始下载新版本\n从Github下载可能较慢，请耐心等待！");
-            string newip = DLUTToolBox_V2.GithubIPHelper.GetGithubIP();
-            if(newip!=null)
-            {
-                url = url.Replace("github.com", newip);
-                SetCertificatePolicy();
-            }
+            Console.WriteLine(url);
             if(HttpDownloadFile(url, System.IO.Path.GetTempPath() + @"\NewVersion.rar"))
             {
                 Process p = new Process();
@@ -1235,23 +1230,28 @@ namespace DLUTToolBox_V2
         {
             try
             {
-                // 设置参数
-                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
-                //发送请求并获取相应回应数据
-                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-                //直到request.GetResponse()程序才开始向目标网页发送Post请求
-                Stream responseStream = response.GetResponseStream();
-                //创建本地文件写入流
-                Stream stream = new FileStream(path, FileMode.Create);
-                byte[] bArr = new byte[10240000];
-                int size = responseStream.Read(bArr, 0, (int)bArr.Length);
-                while (size > 0)
+                using (var web = new WebClient())
                 {
-                    stream.Write(bArr, 0, size);
-                    size = responseStream.Read(bArr, 0, (int)bArr.Length);
+                    web.DownloadFile(url, path);
                 }
-                stream.Close();
-                responseStream.Close();
+                //// 设置参数
+                //HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+                //request.Timeout = 2000;
+                ////发送请求并获取相应回应数据
+                //HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                ////直到request.GetResponse()程序才开始向目标网页发送Post请求
+                //Stream responseStream = response.GetResponseStream();
+                ////创建本地文件写入流
+                //Stream stream = new FileStream(path, FileMode.Create);
+                //byte[] bArr = new byte[10240000];
+                //int size = responseStream.Read(bArr, 0, (int)bArr.Length);
+                //while (size > 0)
+                //{
+                //    stream.Write(bArr, 0, size);
+                //    size = responseStream.Read(bArr, 0, (int)bArr.Length);
+                //}
+                //stream.Close();
+                //responseStream.Close();
                 return true;
             }
             catch (Exception e)
