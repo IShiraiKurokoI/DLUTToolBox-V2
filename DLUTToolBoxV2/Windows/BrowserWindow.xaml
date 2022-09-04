@@ -13,7 +13,7 @@
         ShowTitle="False"
         Title="BrowserWindow" Height="720" Width="1280" WindowStartupLocation="CenterScreen" Closing="Window_Closing" SizeChanged="Window_SizeChanged">
     <hc:Window.NonClientAreaContent>
-        <StackPanel Orientation="Horizontal" Height="42">
+        <StackPanel Orientation="Horizontal" Height="42" Margin="0,0,0,0" HorizontalAlignment="Stretch">
             <Button x:Name="ReturnToMain" Click="ReturnToMain_Click" Foreground="Transparent">
                 <Button.Content>
                     <Image Source="/DlUTToolBoxV2;component/Resources/backward.png" Stretch="Fill"/>
@@ -30,20 +30,22 @@
                     <Image Source="/DlUTToolBoxV2;component/Resources/forward.png" Stretch="Fill"/>
                 </Button.Content>
             </Button>
-            <TextBox x:Name="AddressBox" HorizontalAlignment="Stretch" Margin="6,0,10,0" FontSize="14" Height="30"/>
+            <TextBox x:Name="AddressBox" HorizontalAlignment="Stretch" Margin="6,0,0,0" FontSize="13" Height="30"/>
         </StackPanel>
     </hc:Window.NonClientAreaContent>
     <Grid>
-        <Wpf:WebView2 x:Name="Web" CoreWebView2InitializationCompleted="Web_CoreWebView2InitializationCompleted" NavigationCompleted="Web_NavigationCompleted" Visibility="Hidden" NavigationStarting="Web_NavigationStarting"/>
+        <Wpf:WebView2 x:Name="Web" CoreWebView2InitializationCompleted="Web_CoreWebView2InitializationCompleted" NavigationCompleted="Web_NavigationCompleted" Visibility="Hidden" NavigationStarting="Web_NavigationStarting" Margin="0,0,0,0"/>
         <Canvas>
             <Canvas.Background>
                 <SolidColorBrush Opacity="0.7" Color="AliceBlue"></SolidColorBrush>
             </Canvas.Background>
         </Canvas>
         <DockPanel>
-            <Grid>
-                <Label x:Name="Browser_Background" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="26" Content="&#13;&#13;&#13;加载中，请稍候喵" BorderThickness="0" Background="Transparent"/>
-                <hc:LoadingCircle VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="LoadingCircle"/>
+            <Grid VerticalAlignment="Center">
+                <StackPanel>
+                    <hc:LoadingCircle VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="LoadingCircle"/>
+                    <Label x:Name="Browser_Background" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="26" Content="加载中，请稍候喵" BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center"/>
+                </StackPanel>
             </Grid>
         </DockPanel>
     </Grid>

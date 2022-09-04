@@ -155,7 +155,8 @@ namespace DLUTToolBox_V2
             {
                 UserDataFolder = "UDFS\\EHallUDF"
             };
-            WorkSpace_Web.Source = new Uri("https://sso.dlut.edu.cn/cas/login?service=https%3A%2F%2Fehall.dlut.edu.cn%2Ffp%2Fview%3Fm%3Dfp#act=fp/formHome");
+            //WorkSpace_Web.Source = new Uri("https://sso.dlut.edu.cn/cas/login?service=https%3A%2F%2Fehall.dlut.edu.cn%2Ffp%2Fview%3Fm%3Dfp#act=fp/formHome");
+            WorkSpace_Web.Source = new Uri("https://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421f5ff40902b7e6c5c6b1cc7a99c406d3607/fp/view?m=fp&filter=app&from=rj");
             WeatherBar.CreationProperties = new Microsoft.Web.WebView2.Wpf.CoreWebView2CreationProperties
             {
                 UserDataFolder = "UDFS\\WeatherUDF"
@@ -177,6 +178,7 @@ namespace DLUTToolBox_V2
                 Console.WriteLine(e.StackTrace);
                 LogHelper.WriteErrLog(e);
             }
+            AddressBox.Width = this.Width - 470;
         }
 
         private void OnSystemThemeChanged(object sender, FunctionEventArgs<ThemeManager.SystemTheme> e)
@@ -222,6 +224,10 @@ namespace DLUTToolBox_V2
             {
                 Overview_NetworkInfo.Content = "当前不在校园网内\n部分功能无法使用!";
                 NetWork_NetworkInfo.Content = "当前不在校园网内\n部分功能无法使用!";
+                if (Properties.Settings.Default.DoAutoUpdate == true)
+                {
+                    checkforupdate();
+                }
             }
             else
             {
@@ -250,10 +256,6 @@ namespace DLUTToolBox_V2
                         Growl.SuccessGlobal("登陆成功！\n校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow(data[0]) + "\nIPV4地址:" + data[5] + "\n网卡MAC地址:" + data[3]);
                         WeatherBar.Source = new Uri("http://www.weather.com.cn/");
                     }
-                }
-                else
-                {
-                    checkforupdate();
                 }
                 if (datawarn == true)
                 {
@@ -1892,7 +1894,7 @@ namespace DLUTToolBox_V2
 
         private void WorkSpace_Web_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
-            AddressBox.Text = WorkSpace_Web.Source.AbsoluteUri;
+            AddressBox.Text = WorkSpace_Web.Source.OriginalString;
             if (WorkSpace_Web.Source.AbsoluteUri.IndexOf("https://sso.dlut.edu.cn/cas/login?service=") != -1)
             {
                 login();
@@ -1903,6 +1905,21 @@ namespace DLUTToolBox_V2
                 login();
                 return;
             }
+            if (WorkSpace_Web.Source.AbsoluteUri.IndexOf("https://api.m.dlut.edu.cn/") != -1)
+            {
+                apilogin();
+            }
+        }
+
+        async Task apilogin()
+        {
+            LogHelper.WriteDebugLog("执行api登录注入");
+            string jscode = "username.value='" + Properties.Settings.Default.Uid + "'";
+            string jscode1 = "password.value='" + Properties.Settings.Default.UnionPassword + "'";
+            await WorkSpace_Web.CoreWebView2.ExecuteScriptAsync(jscode);
+            await WorkSpace_Web.CoreWebView2.ExecuteScriptAsync(jscode1);
+            string jscode2 = "$(\"#formpc\").submit()";
+            await WorkSpace_Web.CoreWebView2.ExecuteScriptAsync(jscode2);
         }
 
         async Task login()
@@ -1919,16 +1936,16 @@ namespace DLUTToolBox_V2
 
         private void WorkSpace_Web_NavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
         {
-            if (e.Uri.IndexOf("portal") != -1)
-            {
-                e.Cancel = true;
-                WorkSpace_Web.Source = new Uri("https://ehall.dlut.edu.cn/fp?from=rj");
-            }
-            if (e.Uri.IndexOf("ecard") != -1)
-            {
-                e.Cancel = true;
-                WorkSpace_Web.Source = new Uri("https://ehall.dlut.edu.cn/fp?from=rj");
-            }
+            //if (e.Uri.IndexOf("portal") != -1)
+            //{
+            //    e.Cancel = true;
+            //    WorkSpace_Web.Source = new Uri("https://ehall.dlut.edu.cn/fp?from=rj");
+            //}
+            //if (e.Uri.IndexOf("ecard") != -1)
+            //{
+            //    e.Cancel = true;
+            //    WorkSpace_Web.Source = new Uri("https://ehall.dlut.edu.cn/fp?from=rj");
+            //}
         }
 
         //图书馆
@@ -2634,6 +2651,19 @@ namespace DLUTToolBox_V2
         private void Backward_Click(object sender, RoutedEventArgs e)
         {
             WorkSpace_Web.GoBack();
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            AddressBox.Width = this.Width - 470;
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if(this.Width - 470>0)
+            {
+                AddressBox.Width = this.Width - 470;
+            }
         }
     }
 }

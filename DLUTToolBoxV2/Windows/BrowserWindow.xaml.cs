@@ -40,26 +40,7 @@ namespace DLUTToolBox_V2
                 UserDataFolder = "UDFS\\BrowserViewUDF"
             };
             ThemeManager.Current.SystemThemeChanged += OnSystemThemeChanged;
-            this.TitleLabel.Content = _name;
-            this.Title = _name;
-            count = 0;
-            time = jumpwaittime;
-            Web.Source = new Uri(Url);
-            FinalUri = _FinalUri;
-            rejump = _rejump;
-            specialhandlenum = _specialhandlenum; 
-            if ((this.Width - 480) > 100)
-            {
-                if (AddressBox.Visibility == Visibility.Hidden)
-                {
-                    AddressBox.Visibility = Visibility.Visible;
-                }
-                AddressBox.Width = this.Width - 480;
-            }
-            else
-            {
-                AddressBox.Visibility = Visibility.Hidden;
-            }
+            specialhandlenum = _specialhandlenum;
             if (specialhandlenum == 23)
             {
                 Web.Visibility = Visibility.Visible;
@@ -79,7 +60,26 @@ namespace DLUTToolBox_V2
             }
             if (specialhandlenum == 25)
             {
-                this.Width = this.Width +200;
+                this.Width = this.Width + 200;
+            }
+            this.TitleLabel.Content = _name;
+            this.Title = _name;
+            count = 0;
+            time = jumpwaittime;
+            Web.Source = new Uri(Url);
+            FinalUri = _FinalUri;
+            rejump = _rejump;
+            if ((this.Width - 290 - TitleLabel.ActualWidth) > 100)
+            {
+                if (AddressBox.Visibility == Visibility.Hidden)
+                {
+                    AddressBox.Visibility = Visibility.Visible;
+                }
+                AddressBox.Width = this.Width - 290 - TitleLabel.ActualWidth;
+            }
+            else
+            {
+                AddressBox.Visibility = Visibility.Hidden;
             }
             SetBackgroundImage();
         }
@@ -255,7 +255,7 @@ namespace DLUTToolBox_V2
         {
             if(Web.Source.AbsolutePath.IndexOf("C:/") ==-1)
             {
-                AddressBox.Text = Web.Source.AbsoluteUri;
+                AddressBox.Text = Web.Source.OriginalString;
             }
             else
             {
@@ -693,13 +693,13 @@ namespace DLUTToolBox_V2
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if ((this.Width - 480) > 100)
+            if ((e.NewSize.Width - 290 - TitleLabel.ActualWidth) > 100)
             {
                 if(AddressBox.Visibility==Visibility.Hidden)
                 {
                     AddressBox.Visibility = Visibility.Visible;
                 }
-                AddressBox.Width = this.Width - 480;
+                AddressBox.Width = e.NewSize.Width - 290 - TitleLabel.ActualWidth;
             }
             else
             {

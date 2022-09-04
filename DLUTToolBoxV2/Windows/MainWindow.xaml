@@ -11,9 +11,9 @@
         NonClientAreaHeight="42"
         ShowTitle="False"
         ShowIcon="True"
-        Title="DLUTToolBox V2" Height="720" Width="1400" MinHeight="720" MinWidth="1400" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="DLUTToolBox V2" Height="720" Width="1400" MinHeight="720" MinWidth="1400" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing" SizeChanged="Window_SizeChanged" StateChanged="Window_StateChanged">
     <hc:Window.NonClientAreaContent>
-        <StackPanel Orientation="Horizontal" Height="42">
+        <StackPanel Orientation="Horizontal" Height="42" Margin="0,0,0,0" HorizontalAlignment="Stretch">
             <Label x:Name="TitleLabel" BorderThickness="0" Background="Transparent" FontSize="16"/>
             <Button x:Name="Backward" Click="Backward_Click" Foreground="Transparent" Margin="15,0,0,0" Visibility="Hidden">
                 <Button.Content>
@@ -25,7 +25,7 @@
                     <Image Source="/DlUTToolBoxV2;component/Resources/forward.png" Stretch="Fill"/>
                 </Button.Content>
             </Button>
-            <TextBox x:Name="AddressBox" HorizontalAlignment="Stretch" Margin="6,0,10,0" FontSize="14" Height="30" Width="800" Visibility="Hidden"/>
+            <TextBox x:Name="AddressBox" HorizontalAlignment="Stretch" Margin="6,0,0,0" FontSize="13" Height="30" Visibility="Hidden"/>
         </StackPanel>
     </hc:Window.NonClientAreaContent>
     <Grid>
