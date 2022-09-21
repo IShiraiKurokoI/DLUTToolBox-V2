@@ -620,6 +620,17 @@ namespace DLUTToolBox_V2
                         }
                         break;
                     }
+                case 27:
+                    {
+                        Browser_Background.Content = "";
+                        LoadingCircle.Visibility = Visibility.Hidden;
+                        Web.Visibility = Visibility.Visible;
+                        if (Web.Source.AbsoluteUri.Contains("http://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421f2f552cd693464456a468ca88d1b203b/?filter=app"))
+                        {
+                            Web.ExecuteScriptAsync("document.getElementsByClassName('a-button')[0].click()");
+                        }
+                        break;
+                    }
                 default:
                     {
                         if (Web.Source.AbsoluteUri.IndexOf("api") != -1)

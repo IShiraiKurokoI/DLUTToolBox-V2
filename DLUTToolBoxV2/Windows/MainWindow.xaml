@@ -257,7 +257,8 @@
                         <Button Content="网络自助系统" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="100" FontSize="30"  Margin="30,0,0,0" x:Name="Other_Network" Click="Other_Network_Click"/>
                         <Button Content="跳蚤市场" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="100" FontSize="30"  Margin="20,0,0,0" x:Name="Other_Market" Click="Other_Market_Click"/>
                         <Button Content="返校申请" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="100" FontSize="30"  Margin="20,0,0,0" x:Name="Other_Return" Click="Other_Return_Click"/>
-                        <Button Content="吐槽反馈" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="100" FontSize="30"  Margin="20,0,0,0" x:Name="Other_imiganai" Click="Other_imiganai_Click"/>
+                        <Button Content="青年之家" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="100" FontSize="30"  Margin="20,0,0,0" x:Name="Other_Forum" Click="Other_Forum_Click"/>
+                        <Button Content="DUTer建言" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="100" FontSize="30"  Margin="20,0,0,0" x:Name="Other_DUTer" Click="Other_DUTer_Click"/>
                     </DockPanel>
                 </DockPanel>
                 <DockPanel x:Name="System_Panel" Width="1140" Height="630" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent" Loaded="System_Panel_Loaded">

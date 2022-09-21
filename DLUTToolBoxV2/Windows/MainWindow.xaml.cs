@@ -2050,10 +2050,17 @@ namespace DLUTToolBox_V2
             this.Show();
         }
 
-        private void Other_imiganai_Click(object sender, RoutedEventArgs e)
+        private void Other_Forum_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://api.m.dlut.edu.cn/login?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2fcomplainpraise&response_type=code&scope=base_api&state=dlut", "", "", 0, 23, "吐槽反馈").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421f2f552cd693464456a468ca88d1b203b/?filter=app&from=rj", "", "", 0, 27, "青年之家").ShowDialog();
+            this.Show();
+        }
+
+        private void Other_DUTer_Click(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
+            new BrowserWindow("https://ehall.dlut.edu.cn/fp/s/QZMKMV?from=rj", "", "", 0, 23, "DUTer建言").ShowDialog();
             this.Show();
         }
 
