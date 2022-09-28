@@ -2039,7 +2039,7 @@ namespace DLUTToolBox_V2
         private void Other_Market_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://res.dlut.edu.cn/tp_cgp/view?m=cgp", "", "", 0, 23, "跳蚤市场").ShowDialog();
+            new BrowserWindow("https://res.dlut.edu.cn/tp_cgp/view?m=cgp", "", "", 0, 28, "跳蚤市场").ShowDialog();
             this.Show();
         }
 
@@ -2466,7 +2466,7 @@ namespace DLUTToolBox_V2
 
         private void CPan_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("C:\\windows\\System32\\cleanmgr.exe", "/D C");
+            Process.Start("C:\\windows\\System32\\cleanmgr.exe", "");
         }
 
         private void Spacesniffer_Click(object sender, RoutedEventArgs e)

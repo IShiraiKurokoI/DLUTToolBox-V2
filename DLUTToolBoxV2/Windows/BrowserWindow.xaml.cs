@@ -164,14 +164,11 @@ namespace DLUTToolBox_V2
 
         private void CoreWebView2_NewWindow(object sender, CoreWebView2NewWindowRequestedEventArgs e)
         {
-            if (specialhandlenum != 7)
+            Console.WriteLine(e.Uri);
+            if (specialhandlenum != 7&&specialhandlenum!=28)
             {
                 Web.CoreWebView2.ExecuteScriptAsync("window.location.href='" + e.Uri.ToString() + "'");
                 e.Handled = true;
-            }
-            else
-            {
-
             }
         }
         private void CoreWebView2_DownloadStarting(object sender, CoreWebView2DownloadStartingEventArgs e)
@@ -509,6 +506,7 @@ namespace DLUTToolBox_V2
                 case 21:
                 case 22:
                 case 23:
+                case 28:
                     {
                         if (!Web.Source.AbsoluteUri.StartsWith("https://api.m.dlut.edu.cn/login?client_id="))
                         {

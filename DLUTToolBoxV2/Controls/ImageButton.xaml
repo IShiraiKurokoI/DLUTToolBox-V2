@@ -1,0 +1,16 @@
+﻿<Button x:Class="DLUTToolBox_V2.Controls.ImageButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DLUTToolBox_V2.Controls"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:controls="https://handyorg.github.io/handycontrol"
+             mc:Ignorable="d" 
+             d:DesignWidth="600" d:DesignHeight="240"
+             x:Name="ImageButtonParent">
+    <DockPanel HorizontalAlignment="Left">
+        <Image Source="{Binding ButtonIcon}" HorizontalAlignment="Left" Width="{Binding ElementName=ImageButtonParent, Path=Height}" Height="{Binding ElementName=ImageButtonParent, Path=Height}" DockPanel.Dock="Left"/>
+        <Label Content="{Binding ButtonText}" Height="{Binding ElementName=ImageButtonParent, Path=Height}" HorizontalAlignment="Left" DockPanel.Dock="Left"/>
+    </DockPanel>
+</Button>

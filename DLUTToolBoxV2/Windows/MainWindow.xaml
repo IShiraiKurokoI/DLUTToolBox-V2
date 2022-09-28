@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:controls="https://handyorg.github.io/handycontrol"
+        xmlns:uc="clr-namespace:DLUTToolBox_V2.Controls"
         mc:Ignorable="d"
         OtherButtonForeground="{DynamicResource ReverseTextBrush}"
         NonClientAreaBackground="{DynamicResource ToolBarBackground}"
@@ -177,7 +178,11 @@
                 </DockPanel>
                 <DockPanel x:Name="Network" Width="1140" Height="630" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent">
                     <DockPanel Height="100" Margin="0,30,0,0" VerticalAlignment="Top" DockPanel.Dock="Top">
-                        <Button Content="校园网状态" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="100" FontSize="30"  Margin="30,0,0,0" x:Name="Network_Status" Click="Network_Status_Click"/>
+                        <Button Content="校园网状态" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="100" FontSize="30"  Margin="30,0,0,0" x:Name="Network_Status" Click="Network_Status_Click">
+                            <hc:Poptip.Instance>
+                                <hc:Poptip Content="CERNET状态监测（仅校园网内可用）" PlacementType="TopLeft"/>
+                            </hc:Poptip.Instance>
+                        </Button>
                         <Button Content="校园网自服务" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="100" FontSize="30"  Margin="20,0,0,0" x:Name="Network_SelfService" Click="Network_SelfService_Click"/>
                         <Button Content="网费充值" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="100" FontSize="30"  Margin="20,0,0,0" x:Name="Network_Charge" Click="Network_Charge_Click"/>
                         <Button Content="刷新DNS&#13;解析缓存" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="100" FontSize="30"  Margin="20,0,0,0" x:Name="Network_RefreshDNS" Click="Network_RefreshDNS_Click"/>
@@ -300,7 +305,7 @@
                                 <Label Content="磁盘清理:" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" DockPanel.Dock="Top" BorderThickness="0" Background="Transparent" Margin="0,-40,0,0"/>
                                 <DockPanel Height="100" Margin="0,10,0,0" VerticalAlignment="Top" DockPanel.Dock="Top">
                                     <Button Content="C盘QQ清理" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="160" Height="50" FontSize="20"  Margin="30,0,0,0" x:Name="QQClean" Click="QQClean_Click"/>
-                                    <Button Content="C盘文件清理" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="160" Height="50" FontSize="20"  Margin="20,0,0,0" x:Name="CPan" Click="CPan_Click"/>
+                                    <Button Content="文件清理" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="160" Height="50" FontSize="20"  Margin="20,0,0,0" x:Name="CPan" Click="CPan_Click"/>
                                     <Button Content="磁盘分析器" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="140" Height="50" FontSize="20"  Margin="20,0,0,0" x:Name="Spacesniffer" Click="Spacesniffer_Click"/>
                                     <Button Content="磁盘管理" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="140" Height="50" FontSize="20"  Margin="20,0,0,0" x:Name="DiskManager" Click="DiskManager_Click"/>
                                     <Button Content="还原点管理" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="140" Height="50" FontSize="20"  Margin="20,0,0,0" x:Name="Backuper" Click="Backuper_Click"/>
