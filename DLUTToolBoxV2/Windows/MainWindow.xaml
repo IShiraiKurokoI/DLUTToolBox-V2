@@ -12,6 +12,7 @@
         NonClientAreaHeight="42"
         ShowTitle="False"
         ShowIcon="True"
+        SourceInitialized="Window_SourceInitialized"
         Title="DLUTToolBox V2" Height="720" Width="1400" MinHeight="720" MinWidth="1400" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing" SizeChanged="Window_SizeChanged" StateChanged="Window_StateChanged">
     <hc:Window.NonClientAreaContent>
         <StackPanel Orientation="Horizontal" Height="42" Margin="0,0,0,0" HorizontalAlignment="Stretch">

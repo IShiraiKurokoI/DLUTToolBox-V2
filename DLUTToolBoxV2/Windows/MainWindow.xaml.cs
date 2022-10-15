@@ -29,6 +29,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using HandyControl.Themes;
 using HandyControl.Data;
+using DLUTToolBox_V2.Helper;
 
 
 namespace DLUTToolBox_V2
@@ -192,6 +193,12 @@ namespace DLUTToolBox_V2
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+
+        }
+
+
+        private async void Window_SourceInitialized(object sender, EventArgs e)
+        {
             try
             {
                 netstatusload();
@@ -206,61 +213,114 @@ namespace DLUTToolBox_V2
         bool netload = false;
         async Task netstatusload()
         {
-            Thread.Sleep(400);
-            Process p = new Process();
-            p.StartInfo.FileName = "cmd.exe";
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardInput = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.CreateNoWindow = true;
-            p.Start();
-            p.StandardInput.WriteLine("curl http://mrtg.dlut.edu.cn/internal/dut.html & exit");
-            p.StandardInput.AutoFlush = true;
-            string strre = p.StandardOutput.ReadToEnd();
-            p.WaitForExit();
-            p.Close();
-            if (strre.IndexOf("Unauthorized") != -1)
+            await Task.Delay(400);
+            Task.Run(() =>
             {
-                Overview_NetworkInfo.Content = "当前不在校园网内\n部分功能无法使用!";
-                NetWork_NetworkInfo.Content = "当前不在校园网内\n部分功能无法使用!";
-                if (Properties.Settings.Default.DoAutoUpdate == true)
+                Process p = new Process();
+                p.StartInfo.FileName = "cmd.exe";
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardInput = true;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                p.StartInfo.CreateNoWindow = true;
+                p.Start();
+                p.StandardInput.WriteLine("curl --max-time 2 --connect-timeout 2 --url http://mrtg.dlut.edu.cn/internal/dut.html  & exit");
+                p.StandardInput.AutoFlush = true;
+                string strre = p.StandardOutput.ReadToEnd();
+                p.WaitForExit();
+                p.Close();
+                if (strre.IndexOf("Unauthorized") != -1)
                 {
-                    checkforupdate();
-                }
-            }
-            else
-            {
-                Overview_NetworkInfo.Content = "校园网已接入";
-                NetWork_NetworkInfo.Content = "校园网已接入";
-                loadinfo();
-            }
-        }
-        void loadinfo()
-        {
-            using (WebClient client = new WebClient())
-            {
-                string data_all = client.DownloadString("http://172.20.20.1:801/include/auth_action.php?action=get_online_info");
-                string[] data = data_all.Split(new[] { "," }, StringSplitOptions.None);
-                if (data.Length > 2)
-                {
-                    Overview_NetworkInfo.Content += "\n校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow_2(data[0]) + "\nIPV4地址:" + data[5] + "\n网卡MAC地址:\n" + data[3];
-                    NetWork_NetworkInfo.Content += "\n校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow(data[0]) + "\nIPV4地址:" + data[5] + "\n网卡MAC地址:" + data[3];
-                    netload = true;
+                    Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewSetText), "当前不在校园网内\n部分功能无法使用!");
+                    NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkSetText), "当前不在校园网内\n部分功能无法使用!");
                     if (Properties.Settings.Default.DoAutoUpdate == true)
                     {
                         checkforupdate();
                     }
-                    if (ReConnect == true)
+                }
+                else
+                {
+                    Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewSetText), "校园网已接入");
+                    NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkSetText), "校园网已接入");
+                    loadinfo();
+                }
+            });
+        }
+
+
+
+        private delegate void outputDelegate(string msg);
+
+        private void OverviewSetText(string text)
+        {
+            Overview_NetworkInfo.Content = text;
+        }
+        private void NetWorkSetText(string text)
+        {
+            NetWork_NetworkInfo.Content = text;
+        }
+
+        private void OverviewAddText(string text)
+        {
+            Overview_NetworkInfo.Content = Overview_NetworkInfo.Content + text;
+        }
+        private void NetWorkAddText(string text)
+        {
+            NetWork_NetworkInfo.Content = NetWork_NetworkInfo.Content + text;
+        }
+
+        private void ReloadWeather(string text)
+        {
+            WeatherBar.Source = new Uri("http://www.weather.com.cn/");
+        }
+
+        void loadinfo()
+        {
+            using (WebClientPro client = new WebClientPro())
+            {
+                try
+                {
+                    string data_all = client.DownloadString("http://172.20.20.1:801/include/auth_action.php?action=get_online_info");
+                    string[] data = data_all.Split(new[] { "," }, StringSplitOptions.None);
+                    if (data.Length > 2)
                     {
-                        Growl.SuccessGlobal("登陆成功！\n校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow(data[0]) + "\nIPV4地址:" + data[5] + "\n网卡MAC地址:" + data[3]);
-                        WeatherBar.Source = new Uri("http://www.weather.com.cn/");
+                        Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewAddText), "\n校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow_2(data[0]) + "\nIPV4地址:" + data[5] + "\n网卡MAC地址:\n" + data[3]);
+                        NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkAddText), "\n校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow_2(data[0]) + "\nIPV4地址:" + data[5] + "\n网卡MAC地址:\n" + data[3]);
+                        netload = true;
+                        if (Properties.Settings.Default.DoAutoUpdate == true)
+                        {
+                            checkforupdate();
+                        }
+                        if (ReConnect == true)
+                        {
+                            Growl.SuccessGlobal("登陆成功！\n校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow(data[0]) + "\nIPV4地址:" + data[5] + "\n网卡MAC地址:" + data[3]);
+                            WeatherBar.Dispatcher.Invoke(new outputDelegate(ReloadWeather), "");
+                        }
+                    }
+                    else
+                    {
+                        if (Properties.Settings.Default.DoAutoUpdate == true)
+                        {
+                            checkforupdate();
+                        }
+                        Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewAddText), "\n获取数据失败");
+                        NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkAddText), "\n获取数据失败");
+                    }
+                    if (datawarn == true)
+                    {
+                        Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewAddText), "\n|本月流量使用已超过90G，请留意！！|\n");
+                        NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkAddText), "\n|本月流量使用已超过90G，请留意！！|\n");
                     }
                 }
-                if (datawarn == true)
+                catch (System.Net.WebException ee)
                 {
-                    Overview_NetworkInfo.Content = Overview_NetworkInfo.Content + "\n|本月流量使用已超过90G，请留意！！|\n";
-                    NetWork_NetworkInfo.Content = NetWork_NetworkInfo.Content + "\n|本月流量使用已超过90G，请留意！！|\n";
+                    Growl.WarningGlobal("无法加载校园网信息，五秒超时已到");
+                    Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewAddText), "\n获取数据失败");
+                    NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkAddText), "\n获取数据失败");
+                    if (Properties.Settings.Default.DoAutoUpdate == true)
+                    {
+                        checkforupdate();
+                    }
                 }
             }
         }
