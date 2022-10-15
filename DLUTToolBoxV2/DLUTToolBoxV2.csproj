@@ -119,6 +119,7 @@
     <Compile Include="Controls\ImageButton.xaml.cs">
       <DependentUpon>ImageButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helper\GitUpdateRequest.cs" />
     <Compile Include="Helper\WebClientPro.cs">
       <SubType>Component</SubType>
     </Compile>
