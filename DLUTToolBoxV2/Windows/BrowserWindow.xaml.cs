@@ -282,6 +282,11 @@ namespace DLUTToolBox_V2
                 login();
                 return;
             }
+            if (Web.Source.AbsoluteUri.IndexOf("http://sso.dlut.edu.cn/cas/login?service=") != -1)
+            {
+                login();
+                return;
+            }
             if (Web.Source.AbsoluteUri.IndexOf("cas/login?service=https%3A%2F%2Fwebvpn.dlut.edu.cn%2Flogin") != -1)
             {
                 login();
