@@ -283,23 +283,16 @@ namespace DLUTToolBox_V2
             }
             string Uid = Paths[0];
             string NetworkPassword = Paths[1];
-            string command = "action=login&ac_id=3&user_ip=&nas_ip=&user_mac=&url=&username=" + Uid + "&password=" + NetworkPassword + "&save_me=1";
-            string re = PostWebRequest("http://172.20.20.1:801/srun_portal_pc.php?ac_id=3&", command, Encoding.ASCII);
-            try
+            string command = "action=login&ac_id=3&user_ip=&nas_ip=&user_mac=&url=&username=" + Uid + "&password=" + NetworkPassword + "&save_me=1&ajax=1";
+            string re = PostWebRequest("http://172.20.20.1:801/include/auth_action.php", command, Encoding.ASCII);
+            if (re.IndexOf("login_ok") == -1 && re.IndexOf("IP has been online, please logout.") == -1)
             {
-                re = re.Split(new string[] { Properties.Resources.Split }, StringSplitOptions.None)[1].Split(new string[] { "</td>" }, StringSplitOptions.None)[0];
-                Console.WriteLine(re);
+                Growl.InfoGlobal(re);
                 html = re;
-                if (re.IndexOf("please") == -1&&re.IndexOf("nline")==-1)
-                {
-                    Growl.InfoGlobal(re);
-                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            LogHelper.WriteInfoLog(re);
         }
+
         void NetworkStateChecker_EDA()//检查联网状态
         {
             string strre = "";

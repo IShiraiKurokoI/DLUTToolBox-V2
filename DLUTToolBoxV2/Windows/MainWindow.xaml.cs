@@ -1630,37 +1630,13 @@ namespace DLUTToolBox_V2
 
         async Task manualconnect()
         {
-            string command = "action=login&ac_id=3&user_ip=&nas_ip=&user_mac=&url=&username=" + Properties.Settings.Default.Uid + "&password=" + Properties.Settings.Default.NetworkPassword + "&save_me=1";
-            string re = PostWebRequest("http://172.20.20.1:801/srun_portal_pc.php?ac_id=3&", command, Encoding.ASCII);
-            try
+            string command = "action=login&ac_id=3&user_ip=&nas_ip=&user_mac=&url=&username=" + Properties.Settings.Default.Uid + "&password=" + Properties.Settings.Default.NetworkPassword + "&save_me=1&ajax=1";
+            string re = PostWebRequest("http://172.20.20.1:801/include/auth_action.php", command, Encoding.ASCII);
+            if (re.IndexOf("login_ok") == -1&& re.IndexOf("IP has been online, please logout.") == -1)
             {
-                string rre = re.Split(new string[] { Properties.Resources.Split }, StringSplitOptions.None)[1].Split(new string[] { "</td>" }, StringSplitOptions.None)[0];
-                if (rre.IndexOf("please") == -1 && re.IndexOf("online") == -1)
-                {
-                    Growl.InfoGlobal(rre);
-                }
+                Growl.InfoGlobal(re);
             }
-            catch (Exception ex)
-            {
-                if (ex.Message.IndexOf("超出了数组界限") != -1)
-                {
-                    if (re.Length > 1000)
-                    {
-                        Console.WriteLine("没有检测到登陆失败的原因，应该是自动执行登录成功了，这个越界影响不大");
-                        LogHelper.WriteDebugLog("没有检测到登陆失败的原因，应该是自动执行登录成功了，这个越界影响不大");
-                    }
-                    else
-                    {
-                        Console.WriteLine("奇怪的问题，可能是认证服务器的原因。。。。");
-                        LogHelper.WriteDebugLog("奇怪的问题，可能是认证服务器的原因。。。。");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine(ex.Message);
-                    LogHelper.WriteErrLog(ex);
-                }
-            }
+            LogHelper.WriteInfoLog(re);
             netstatusload();
         }
 
