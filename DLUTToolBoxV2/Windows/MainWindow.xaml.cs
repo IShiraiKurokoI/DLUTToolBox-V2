@@ -303,8 +303,16 @@ namespace DLUTToolBox_V2
                         {
                             checkforupdate();
                         }
-                        Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewAddText), "\n获取数据失败");
-                        NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkAddText), "\n获取数据失败");
+                        if(data_all != null)
+                        {
+                            Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewAddText), "\n获取数据失败:"+data_all);
+                            NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkAddText), "\n获取数据失败:"+data_all);
+                        }
+                        else
+                        {
+                            Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewAddText), "\n获取数据失败");
+                            NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkAddText), "\n获取数据失败");
+                        }
                     }
                     if (datawarn == true)
                     {
@@ -1673,31 +1681,47 @@ namespace DLUTToolBox_V2
 
         private void Network_ManualDisconnect_Click(object sender, RoutedEventArgs e)
         {
-            string command = "action=logout&username=" + Properties.Settings.Default.Uid + "&password=" + Properties.Settings.Default.NetworkPassword + "&ajax=1";
-            string respose = PostWebRequest("http://172.20.20.1:801/include/auth_action.php", command, Encoding.ASCII);
-            if (respose == "网络已断开")
+            string[] data;
+            using (WebClientPro client = new WebClientPro())
             {
-                Growl.SuccessGlobal("手动注销成功");
+                string data_all = client.DownloadString("http://172.20.20.1:801/include/auth_action.php?action=get_online_info");
+                data = data_all.Split(new[] { "," }, StringSplitOptions.None);
             }
-            else
+            if(data.Length>2)
             {
-                Growl.InfoGlobal(respose);
-            }
-            Overview_NetworkInfo.Content = "";
-            NetWork_NetworkInfo.Content = "";
-            netstatusload();
-            try
-            {
-                if (!PingIp("172.20.20.1"))
+                string command = "action=logout&ac_id=3&user_ip=" + data[5] +"&nas_ip="+ data[5] + "&user_mac="+ data[3] + "&username=" + Properties.Settings.Default.Uid + "&password=" + Properties.Settings.Default.NetworkPassword + "&ajax=1";
+                string respose = PostWebRequest("http://172.20.20.1:801/include/auth_action.php", command, Encoding.ASCII);
+                if (respose == "网络已断开")
                 {
-                    Growl.InfoGlobal("抱歉！\n暂不支持开发区校区之外的注销功能！");
+                    Growl.SuccessGlobal("手动注销成功");
+                }
+                else
+                {
+                    Growl.InfoGlobal(respose);
+                }
+                Overview_NetworkInfo.Content = "";
+                NetWork_NetworkInfo.Content = "";
+                netstatusload();
+            }else
+            {
+                try
+                {
+                    if (!PingIp("172.20.20.1"))
+                    {
+                        Growl.InfoGlobal("抱歉！\n暂不支持开发区校区之外的注销功能！");
+                    }
+                    else
+                    {
+                        Growl.InfoGlobal("你尚未连接到校园网，无法断开连接");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    LogHelper.WriteErrLog(ex);
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                LogHelper.WriteErrLog(ex);
-            }
+            
         }
 
         private bool PingIp(string strIP)
