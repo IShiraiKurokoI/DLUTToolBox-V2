@@ -97,8 +97,8 @@ namespace DLUTToolBox_V2
 
         private void Genp_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("http://mediafire.com/file/3lpsrxiz47mlhu2/Adobe-GenP-2.7.zip/file");
-            Process.Start("https://pan.baidu.com/s/1HBfqKUxpFIEpyDGRgB60-g?pwd=0301");
+            Process.Start("https://www.mediafire.com/file/ipp9gj15xzty1uw/GenP_3.0_Release.zip/file");
+            Process.Start("https://pan.baidu.com/s/1wylFvTYgNdS859oz2qfHtw?pwd=y6us");
         }
 
         private void Green_Click(object sender, RoutedEventArgs e)
