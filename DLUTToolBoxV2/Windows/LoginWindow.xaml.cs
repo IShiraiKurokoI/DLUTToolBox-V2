@@ -76,14 +76,12 @@ namespace DLUTToolBox_V2
         }
         async Task LoginProcedureStarter()
         {
-
-            Task.Run(() =>
-            {
                 if(!PreProcedureNeteorkCheck())
                 {
                     if(PingIp("172.20.30.1"))
                     {
-                        EDALoginProcedure();
+                        //Console.WriteLine("EDA");
+                        //EDALoginProcedure();
                     }
                     else
                     {
@@ -94,11 +92,10 @@ namespace DLUTToolBox_V2
                         }
                         else
                         {
-                            EDALoginProcedure();
+                            //EDALoginProcedure();
                         }
                     }
                 }
-            });
         }
 
         string info;
@@ -120,6 +117,7 @@ namespace DLUTToolBox_V2
             string strre = p1.StandardOutput.ReadToEnd();
             p1.WaitForExit();
             p1.Close();
+            LogHelper.WriteDebugLog(strre);
             if (strre.Length > 1000)
             {
                 LogHelper.WriteInfoLog("网络已连接无需登录");
@@ -307,6 +305,7 @@ namespace DLUTToolBox_V2
                 string result = client.DownloadString("http://172.20.30.1/drcom/chkstatus?callback=");
                 string data = result.Split(new[] { "(" }, StringSplitOptions.None)[1].Split(new[] { ")" }, StringSplitOptions.None)[0];
                 DrcomStatus drcomStatus = JsonConvert.DeserializeObject<DrcomStatus>(data);
+                Console.WriteLine(data);
                 if (data.IndexOf("\"result\":1,") != -1)
                 {
                     Growl.InfoGlobal("您已在线,无需登录!");
@@ -318,6 +317,7 @@ namespace DLUTToolBox_V2
                     {
                         loginweb.NavigationCompleted += (sender1, args1) =>
                         {
+                            Console.WriteLine(loginweb.Source.AbsoluteUri);
                             if (loginweb.Source.AbsoluteUri.IndexOf("https://sso.dlut.edu.cn/cas/login?service=http%3A%2F%2F172.20.30.2%3A8080%2FSelf%2Fsso_login") != -1)
                             {
                                 LogHelper.WriteDebugLog("执行sso登录注入");
@@ -366,7 +366,6 @@ namespace DLUTToolBox_V2
             {
                 loadinfo();
                 Growl.SuccessGlobal("连接成功\n您已正常连接互联网\n" + info + "\n登录模块自动退出");
-                PostExit(6000);
                 PostExit(8000);
             }
             else
@@ -460,6 +459,62 @@ namespace DLUTToolBox_V2
         {
             Growl.FatalGlobal("⚠⚠连接失败⚠⚠");
             PostExit(4000);
+        }
+
+        private void WebView2_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
+        {
+            if (EDALoginWeb.Source.AbsoluteUri.IndexOf("https://sso.dlut.edu.cn/cas/login?service=http%3A%2F%2F172.20.30.2%3A8080%2FSelf%2Fsso_login") != -1)
+            {
+
+                string[] Paths = new string[2];
+                if (File.Exists(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName.Replace("DLUTToolBoxV2.exe", "Network.config")))
+                {
+                    int i = 0;
+                    using (StreamReader sr = new StreamReader(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName.Replace("DLUTToolBoxV2.exe", "Network.config")))
+                    {
+                        string line;
+                        // 从文件读取并显示行，直到文件的末尾 
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            Paths[i] = line;
+                            if (i == 1)
+                            {
+                                break;
+                            }
+                            i++;
+                        }
+                        sr.Close();
+                    }
+                    un = Paths[0];
+                    pd = Paths[1];
+                }
+                else
+                {
+                    Growl.FatalGlobal("配置文件丢失!\n" + System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName.Replace("DLUTToolBoxV2.exe", "Network.config"));
+                    Thread.Sleep(3000);
+                    Growl.ClearGlobal();
+                    Growl.InfoGlobal("配置文件加载成功！");
+                    return;
+                }
+                string Uid = Paths[0];
+                string NetworkPassword = Paths[1];
+                LogHelper.WriteDebugLog("执行sso登录注入");
+                string jscode = "un.value='" + Uid + "'";
+                string jscode1 = "pd.value='" + NetworkPassword + "'";
+                string rm = "rememberName.checked='checked'";
+                EDALoginWeb.CoreWebView2.ExecuteScriptAsync(rm);
+                EDALoginWeb.CoreWebView2.ExecuteScriptAsync(jscode);
+                EDALoginWeb.CoreWebView2.ExecuteScriptAsync(jscode1);
+                string jscode2 = "login()";
+                EDALoginWeb.CoreWebView2.ExecuteScriptAsync(jscode2);
+            }
+            else if (EDALoginWeb.Source.AbsoluteUri.IndexOf("http://172.20.30.2:8080/Self/dashboard;jsessionid=") != -1)
+            {
+                EDALoginWeb.CoreWebView2.CookieManager.DeleteAllCookies();
+                loadinfo();
+                Growl.SuccessGlobal("连接成功\n" + info + "\n登录模块自动退出");
+                PostExit(8000);
+            }
         }
     }
 }

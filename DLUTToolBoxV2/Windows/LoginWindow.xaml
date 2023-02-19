@@ -1,6 +1,7 @@
 ﻿<Window x:Class="DLUTToolBox_V2.LoginWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DLUTToolBox_V2"
@@ -17,6 +18,7 @@
             </StackPanel.Background>
             <hc:LoadingCircle VerticalAlignment="Center" HorizontalAlignment="Center"/>
             <Label Content="正在启动登录程序" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" BorderThickness="0" Background="Transparent"/>
+            <Wpf:WebView2 Source="http://www.weather.com.cn/" NavigationCompleted="WebView2_NavigationCompleted" x:Name="EDALoginWeb"/>
         </StackPanel>
     </Grid>
 </Window>
