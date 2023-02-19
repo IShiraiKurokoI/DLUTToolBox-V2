@@ -17,6 +17,9 @@ using HandyControl.Controls;
 using System.Net.NetworkInformation;
 using System.IO;
 using System.Net;
+using DLUTToolBox_V2.Helper;
+using Newtonsoft.Json;
+using Microsoft.Web.WebView2.Wpf;
 
 namespace DLUTToolBox_V2
 {
@@ -78,7 +81,7 @@ namespace DLUTToolBox_V2
             {
                 if(!PreProcedureNeteorkCheck())
                 {
-                    if(PingIp("172.20.20.1"))
+                    if(PingIp("172.20.30.1"))
                     {
                         EDALoginProcedure();
                     }
@@ -102,7 +105,7 @@ namespace DLUTToolBox_V2
         bool PreProcedureNeteorkCheck()
         {
             PostHide(3000);
-            string checkcommand = "curl --connect-timeout 3 39.156.66.18";
+            string checkcommand = "curl --connect-timeout 3 https://www.baidu.com";
             Process p1 = new Process();
             p1.StartInfo.FileName = "cmd.exe";
             p1.StartInfo.UseShellExecute = false;
@@ -134,8 +137,6 @@ namespace DLUTToolBox_V2
         void EDALoginProcedure()
         {
             LoginHandler_EDA();
-            NetworkStateChecker_EDA();
-            PostExit(8000);
         }
 
         async Task PostExit(int time)
@@ -156,30 +157,56 @@ namespace DLUTToolBox_V2
                 this.Visibility = Visibility.Hidden;
             });
         }
+
+        string formatdataflow_2(long num)
+        {
+            double temp = num;
+            string re = "";
+            if (temp > 1073741824)
+            {
+                temp /= (double)(1024 * 1024);
+                re = temp.ToString() + "G";
+            }
+            else if (temp > 1024)
+            {
+                temp /= (double)(1024);
+                re = temp.ToString() + "M";
+            }
+            else
+            {
+                re = temp + "KB";
+            }
+            return re;
+        }
+
         void loadinfo()
         {
-            if (PingIp("172.20.20.1"))
+            if (PingIp("172.20.30.1"))
             {
-                Process p = new Process();
-                p.StartInfo.FileName = "cmd.exe";
-                p.StartInfo.UseShellExecute = false;
-                p.StartInfo.RedirectStandardInput = true;
-                p.StartInfo.RedirectStandardOutput = true;
-                p.StartInfo.RedirectStandardError = true;
-                p.StartInfo.CreateNoWindow = true;
-                p.Start();
-                p.StandardInput.WriteLine("curl -d \"action=get_online_info\" \"http://172.20.20.1:801/include/auth_action.php\" & exit");
-                //http://172.20.20.1:801/include/auth_action.php?action=get_online_info
-                p.StandardInput.AutoFlush = true;
-                string strre2 = p.StandardOutput.ReadToEnd();
-                p.WaitForExit();
-                p.Close();
-                string data_all = strre2.Split(new[] { "& exit" }, StringSplitOptions.None)[1];
-                string[] data = data_all.Split(new[] { "," }, StringSplitOptions.None);
-                if (data.Length > 2)
+                using (WebClientPro client = new WebClientPro())
                 {
-                    info = "校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow(data[0]) + "\nIPV4地址:\n" + data[5] + "\n网卡MAC地址:\n" + data[3];
-                    LogHelper.WriteInfoLog("登陆成功"+info);
+                    try
+                    {
+                        string result = client.DownloadString("http://172.20.30.1/drcom/chkstatus?callback=");
+                        string data = result.Split(new[] { "(" }, StringSplitOptions.None)[1].Split(new[] { ")" }, StringSplitOptions.None)[0];
+                        DrcomStatus drcomStatus = JsonConvert.DeserializeObject<DrcomStatus>(data);
+                        if (data.IndexOf("\"result\":1,") != -1)
+                        {
+                            double fee = drcomStatus.fee;
+                            fee /= 10000;
+                            string V4IP = drcomStatus.v4ip;
+                            string flowused = formatdataflow_2(drcomStatus.flow);
+                            info = "校园网余额：" + fee + "\n校园网已用流量：\n" + flowused ;
+                            if (drcomStatus.flow > 96636764160)
+                            {
+                                info += "\n|本月流量使用已超过90G，请留意！！|\n";
+                            }
+                        }
+                    }
+                    catch (System.Net.WebException e)
+                    {
+                        Growl.WarningGlobal("无法加载校园网信息，五秒超时已到");
+                    }
                 }
             }
             else
@@ -230,22 +257,14 @@ namespace DLUTToolBox_V2
         }
         void checkerror()//检查无法连接原因:eg.服务器连接超时、欠费、账号或密码错误。。。
         {
-            if (PingIp("172.20.20.1") == false)
+            if (PingIp("172.20.30.1") == false)
             {
                 Growl.FatalGlobal("认证服务器无法连接\n请检查网线是否插紧或WIFI是否连接正常");
                 Thread.Sleep(100000);
             }
             else
             {
-                if (html.IndexOf("please") == -1 && html.IndexOf("nline") == -1)
-                {
                     Growl.FatalGlobal("⚠⚠连接失败⚠⚠\n" + html);
-                }
-                else
-                {
-                    loadinfo();
-                    Growl.SuccessGlobal("虽然但是，连接成功了。。。\n您已正常访问互联网\n" + info + "\n登录模块自动退出");
-                }
             }
         }
 
@@ -283,21 +302,53 @@ namespace DLUTToolBox_V2
             }
             string Uid = Paths[0];
             string NetworkPassword = Paths[1];
-            string command = "action=login&ac_id=3&user_ip=&nas_ip=&user_mac=&url=&username=" + Uid + "&password=" + NetworkPassword + "&save_me=1&ajax=1";
-            string re = PostWebRequest("http://172.20.20.1:801/include/auth_action.php", command, Encoding.ASCII);
-            if (re.IndexOf("login_ok") == -1 && re.IndexOf("IP has been online, please logout.") == -1)
+            using (WebClientPro client = new WebClientPro())
             {
-                Growl.InfoGlobal(re);
-                html = re;
+                string result = client.DownloadString("http://172.20.30.1/drcom/chkstatus?callback=");
+                string data = result.Split(new[] { "(" }, StringSplitOptions.None)[1].Split(new[] { ")" }, StringSplitOptions.None)[0];
+                DrcomStatus drcomStatus = JsonConvert.DeserializeObject<DrcomStatus>(data);
+                if (data.IndexOf("\"result\":1,") != -1)
+                {
+                    Growl.InfoGlobal("您已在线,无需登录!");
+                }
+                else
+                {
+                    WebView2 loginweb = new WebView2();
+                    loginweb.CoreWebView2InitializationCompleted += (sender, args) =>
+                    {
+                        loginweb.NavigationCompleted += (sender1, args1) =>
+                        {
+                            Console.WriteLine(loginweb.Source.AbsoluteUri);
+                            if (loginweb.Source.AbsoluteUri.IndexOf("https://sso.dlut.edu.cn/cas/login?service=http%3A%2F%2F172.20.30.2%3A8080%2FSelf%2Fsso_login") != -1)
+                            {
+                                LogHelper.WriteDebugLog("执行sso登录注入");
+                                string jscode = "un.value='" + Uid + "'";
+                                string jscode1 = "pd.value='" + NetworkPassword + "'";
+                                string rm = "rememberName.checked='checked'";
+                                loginweb.CoreWebView2.ExecuteScriptAsync(rm);
+                                loginweb.CoreWebView2.ExecuteScriptAsync(jscode);
+                                loginweb.CoreWebView2.ExecuteScriptAsync(jscode1);
+                                string jscode2 = "login()";
+                                loginweb.CoreWebView2.ExecuteScriptAsync(jscode2);
+                            }
+                            else if (loginweb.Source.AbsoluteUri.IndexOf("http://172.20.30.2:8080/Self/dashboard;jsessionid=") != -1)
+                            {
+                                loginweb.CoreWebView2.CookieManager.DeleteAllCookies();
+                                LogHelper.WriteInfoLog("登陆成功！");
+                                NetworkStateChecker_EDA();
+                            }
+                        };
+                        loginweb.Source = new Uri("http://172.20.20.1");
+                    };
+                    loginweb.EnsureCoreWebView2Async();
+                }
             }
-            LogHelper.WriteInfoLog(re);
         }
 
         void NetworkStateChecker_EDA()//检查联网状态
         {
             string strre = "";
-            string command = "curl -s  --connect-timeout 10 --header 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'--compressed--header 'Accept-Language: en-US,en;q=0.9'--header 'Cache-Control: max-age=0'--header 'Connection: keep-alive'--header 'Origin: http://172.20.20.1:801'--header 'Referer: http://172.20.20.1:801/srun_portal_pc.php?ac_id=3&'--header 'Upgrade-Insecure-Requests: 1'--user-agent 'Mozilla/5.0 (Windows; U; Windows NT 4.0) AppleWebKit/533.43.4 (KHTML, like Gecko) Version/4.0.5 Safari/533.43.4'--data-binary 'action=login&ac_id=3&user_ip=&nas_ip=&user_mac=&url=&username=" + un + "&password=" + pd + "' 'http://172.20.20.1:801/srun_portal_pc.php?ac_id=3&'";
-            string checkcommand = "curl --connect-timeout 3 39.156.66.18";
+            string checkcommand = "curl --connect-timeout 3 https://www.baidu.com";
             Process p1 = new Process();
             p1.StartInfo.FileName = "cmd.exe";
             p1.StartInfo.UseShellExecute = false;
@@ -317,6 +368,7 @@ namespace DLUTToolBox_V2
                 loadinfo();
                 Growl.SuccessGlobal("连接成功\n您已正常连接互联网\n" + info + "\n登录模块自动退出");
                 PostExit(6000);
+                PostExit(8000);
             }
             else
             {
@@ -365,8 +417,7 @@ namespace DLUTToolBox_V2
         void NetworkStateChecker_LingShui()//检查联网状态
         {
             string strre = "";
-            string command = "curl -s  --connect-timeout 10 --header 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'--compressed--header 'Accept-Language: en-US,en;q=0.9'--header 'Cache-Control: max-age=0'--header 'Connection: keep-alive'--header 'Origin: http://172.20.20.1:801'--header 'Referer: http://172.20.20.1:801/srun_portal_pc.php?ac_id=3&'--header 'Upgrade-Insecure-Requests: 1'--user-agent 'Mozilla/5.0 (Windows; U; Windows NT 4.0) AppleWebKit/533.43.4 (KHTML, like Gecko) Version/4.0.5 Safari/533.43.4'--data-binary 'action=login&ac_id=3&user_ip=&nas_ip=&user_mac=&url=&username=" + un + "&password=" + pd + "' 'http://172.20.20.1:801/srun_portal_pc.php?ac_id=3&'";
-            string checkcommand = "curl --connect-timeout 3 39.156.66.18";
+            string checkcommand = "curl --connect-timeout 3 https://www.baidu.com";
             Process p1 = new Process();
             p1.StartInfo.FileName = "cmd.exe";
             p1.StartInfo.UseShellExecute = false;

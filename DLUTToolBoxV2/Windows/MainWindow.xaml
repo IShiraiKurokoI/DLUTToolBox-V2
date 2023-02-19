@@ -133,7 +133,7 @@
                         <ToggleButton DockPanel.Dock="left" Margin="80,-4,0,0" BorderThickness="0"  Style="{StaticResource ToggleButtonSwitch}" Height="50" Width="50" HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="DoAutoThemeFollow" Checked="DoAutoThemeFollow_Checked" Unchecked="DoAutoThemeFollow_Unchecked"/>
                         <Label Content="工具箱自动跟随系统主题" DockPanel.Dock="Left" HorizontalAlignment="Left" Margin="10,2,0,0" FontSize="22" Background="Transparent" BorderThickness="0" VerticalAlignment="Center"/>
                     </DockPanel>
-                    <DockPanel Height="40" DockPanel.Dock="Top" Margin="0,-30,0,0">
+                    <DockPanel Height="40" DockPanel.Dock="Top" Margin="0,-80,0,0">
                         <ToggleButton DockPanel.Dock="left" Margin="80,-4,0,0" BorderThickness="0"  Style="{StaticResource ToggleButtonSwitch}" Width="50" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="DoAutoUpdate" Checked="DoAutoUpdate_Checked" Unchecked="DoAutoUpdate_Unchecked"/>
                         <Label Content="工具箱自动检查更新" DockPanel.Dock="Left" HorizontalAlignment="Left" Margin="10,2,0,0" FontSize="22" Background="Transparent" BorderThickness="0" VerticalAlignment="Center"/>
                     </DockPanel>
