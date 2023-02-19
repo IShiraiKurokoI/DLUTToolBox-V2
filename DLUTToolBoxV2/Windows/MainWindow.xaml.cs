@@ -30,7 +30,7 @@ using System.Security.Cryptography.X509Certificates;
 using HandyControl.Themes;
 using HandyControl.Data;
 using DLUTToolBox_V2.Helper;
-
+using Microsoft.Web.WebView2.WinForms;
 
 namespace DLUTToolBox_V2
 {
@@ -1625,10 +1625,50 @@ namespace DLUTToolBox_V2
 
         async Task manualconnect()
         {
-            Growl.InfoGlobal("尚未实现!");
-            netstatusload();
+            using (WebClientPro client = new WebClientPro())
+            {
+                string result = client.DownloadString("http://172.20.30.1/drcom/chkstatus?callback=");
+                string data = result.Split(new[] { "(" }, StringSplitOptions.None)[1].Split(new[] { ")" }, StringSplitOptions.None)[0];
+                DrcomStatus drcomStatus = JsonConvert.DeserializeObject<DrcomStatus>(data);
+                if (data.IndexOf("\"result\":1,") != -1)
+                {
+                    Growl.InfoGlobal("您已在线,无需登录!");
+                }
+                else
+                {
+                    WebView2 loginweb = new WebView2();
+                    loginweb.CoreWebView2InitializationCompleted += (sender, args) =>
+                    {
+                        loginweb.NavigationCompleted += (sender1, args1) =>
+                        {
+                            Console.WriteLine(loginweb.Source.AbsoluteUri);
+                            if (loginweb.Source.AbsoluteUri.IndexOf("https://sso.dlut.edu.cn/cas/login?service=http%3A%2F%2F172.20.30.2%3A8080%2FSelf%2Fsso_login") != -1)
+                            {
+                                LogHelper.WriteDebugLog("执行sso登录注入");
+                                string jscode = "un.value='" + Properties.Settings.Default.Uid + "'";
+                                string jscode1 = "pd.value='" + Properties.Settings.Default.UnionPassword + "'";
+                                string rm = "rememberName.checked='checked'";
+                                loginweb.CoreWebView2.ExecuteScriptAsync(rm);
+                                loginweb.CoreWebView2.ExecuteScriptAsync(jscode);
+                                loginweb.CoreWebView2.ExecuteScriptAsync(jscode1);
+                                string jscode2 = "login()";
+                                loginweb.CoreWebView2.ExecuteScriptAsync(jscode2);
+                            }
+                            else if (loginweb.Source.AbsoluteUri.IndexOf("http://172.20.30.2:8080/Self/dashboard;jsessionid=") != -1)
+                            {
+                                Growl.SuccessGlobal("登陆成功！");
+                                NetWork_NetworkInfo.Content = "正在加载信息。。。";
+                                Overview_NetworkInfo.Content = "正在加载信息。。。";
+                                netstatusload();
+                                loginweb.CoreWebView2.CookieManager.DeleteAllCookies();
+                            }
+                        };
+                        loginweb.Source = new Uri("http://172.20.20.1");
+                    };
+                    loginweb.EnsureCoreWebView2Async();
+                }
+            }
         }
-
 
         private string PostWebRequest(string postUrl, string paramData, Encoding dataEncode)
         {
