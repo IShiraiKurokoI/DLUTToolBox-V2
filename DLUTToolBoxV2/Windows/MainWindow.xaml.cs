@@ -1641,7 +1641,6 @@ namespace DLUTToolBox_V2
                     {
                         loginweb.NavigationCompleted += (sender1, args1) =>
                         {
-                            Console.WriteLine(loginweb.Source.AbsoluteUri);
                             if (loginweb.Source.AbsoluteUri.IndexOf("https://sso.dlut.edu.cn/cas/login?service=http%3A%2F%2F172.20.30.2%3A8080%2FSelf%2Fsso_login") != -1)
                             {
                                 LogHelper.WriteDebugLog("执行sso登录注入");
@@ -1702,48 +1701,56 @@ namespace DLUTToolBox_V2
 
         private void Network_ManualDisconnect_Click(object sender, RoutedEventArgs e)
         {
-            Growl.InfoGlobal("尚未实现");
-            //string[] data;
-            //using (WebClientPro client = new WebClientPro())
-            //{
-            //    string data_all = client.DownloadString("http://172.20.20.1:801/include/auth_action.php?action=get_online_info");
-            //    data = data_all.Split(new[] { "," }, StringSplitOptions.None);
-            //}
-            //if(data.Length>2)
-            //{
-            //    string command = "action=logout&ac_id=3&user_ip=" + data[5] +"&nas_ip="+ data[5] + "&user_mac="+ data[3] + "&username=" + Properties.Settings.Default.Uid + "&password=" + Properties.Settings.Default.NetworkPassword + "&ajax=1";
-            //    string respose = PostWebRequest("http://172.20.20.1:801/include/auth_action.php", command, Encoding.ASCII);
-            //    if (respose == "网络已断开")
-            //    {
-            //        Growl.SuccessGlobal("手动注销成功");
-            //    }
-            //    else
-            //    {
-            //        Growl.InfoGlobal(respose);
-            //    }
-            //    Overview_NetworkInfo.Content = "";
-            //    NetWork_NetworkInfo.Content = "";
-            //    netstatusload();
-            //}else
-            //{
-            //    try
-            //    {
-            //        if (!PingIp("172.20.20.1"))
-            //        {
-            //            Growl.InfoGlobal("抱歉！\n暂不支持开发区校区之外的注销功能！");
-            //        }
-            //        else
-            //        {
-            //            Growl.InfoGlobal("你尚未连接到校园网，无法断开连接");
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Console.WriteLine(ex.Message);
-            //        LogHelper.WriteErrLog(ex);
-            //    }
-            //}
-
+            Growl.SuccessGlobal("注销请求已经发送！\n请等待。。。。");
+            using (WebClientPro client = new WebClientPro())
+            {
+                string result = client.DownloadString("http://172.20.30.1/drcom/chkstatus?callback=");
+                string data = result.Split(new[] { "(" }, StringSplitOptions.None)[1].Split(new[] { ")" }, StringSplitOptions.None)[0];
+                DrcomStatus drcomStatus = JsonConvert.DeserializeObject<DrcomStatus>(data);
+                if (data.IndexOf("\"result\":1,") != -1)
+                {
+                    WebView2 logoutweb = new WebView2();
+                    logoutweb.CoreWebView2InitializationCompleted += (sender1, args) =>
+                    {
+                        logoutweb.NavigationCompleted += (sender2, args1) =>
+                        {
+                            Console.WriteLine(logoutweb.Source.AbsoluteUri.ToString());
+                            if (logoutweb.Source.AbsoluteUri.IndexOf("172.20.30.1")!=-1&& logoutweb.Source.AbsoluteUri.IndexOf("a79.htm")==-1)
+                            {
+                                logoutweb.ExecuteScriptAsync("user.unbind_mac(\"\", \"\", 1);");
+                            }
+                            else if (logoutweb.Source.AbsoluteUri.IndexOf("a79.htm") != -1)
+                            {
+                                logoutweb.ExecuteScriptAsync("user.unbind_mac(\"\", \"\", 1);");
+                                Growl.SuccessGlobal("注销成功");
+                                logoutweb.CoreWebView2.CookieManager.DeleteAllCookies();
+                                netstatusload();
+                            }
+                        };
+                        logoutweb.Source = new Uri("http://172.20.30.1/");
+                    };
+                    logoutweb.EnsureCoreWebView2Async();
+                }
+                else
+                {
+                    try
+                    {
+                        if (!PingIp("172.20.20.1"))
+                        {
+                            Growl.InfoGlobal("抱歉！\n暂不支持开发区校区之外的注销功能！");
+                        }
+                        else
+                        {
+                            Growl.InfoGlobal("你尚未连接到校园网，无法断开连接");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        LogHelper.WriteErrLog(ex);
+                    }
+                }
+            }
         }
 
         private bool PingIp(string strIP)

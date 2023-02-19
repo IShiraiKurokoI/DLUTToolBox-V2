@@ -318,7 +318,6 @@ namespace DLUTToolBox_V2
                     {
                         loginweb.NavigationCompleted += (sender1, args1) =>
                         {
-                            Console.WriteLine(loginweb.Source.AbsoluteUri);
                             if (loginweb.Source.AbsoluteUri.IndexOf("https://sso.dlut.edu.cn/cas/login?service=http%3A%2F%2F172.20.30.2%3A8080%2FSelf%2Fsso_login") != -1)
                             {
                                 LogHelper.WriteDebugLog("执行sso登录注入");
