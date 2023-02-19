@@ -1356,7 +1356,6 @@ namespace DLUTToolBox_V2
                 WeatherBar.CoreWebView2.ExecuteScriptAsync(jscode1);
                 string jscode2 = "login()";
                 WeatherBar.CoreWebView2.ExecuteScriptAsync(jscode2);
-                netstatusload();
                 ClassTable.Height = 0;
                 TableCirlcle.Visibility = Visibility.Visible;
             }
@@ -1369,6 +1368,7 @@ namespace DLUTToolBox_V2
                 ClassTable.Source = new Uri("https://api.m.dlut.edu.cn/login?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2fcourseschedule&response_type=code");
                 Eleinfo.Source = new Uri("https://api.m.dlut.edu.cn/login?client_id=19b32196decf419a&redirect_uri=https%3A%2F%2Fcard.m.dlut.edu.cn%2Fhomerj%2FopenRjOAuthPage&response_type=code&scope=base_api&state=weishao");
                 WorkSpace_Web.Source = new Uri("https://sso.dlut.edu.cn/cas/login?service=https%3A%2F%2Fehall.dlut.edu.cn%2Ffp%2Fview%3Fm%3Dfp#act=fp/formHome");
+                netstatusload();
             }
         }
 
