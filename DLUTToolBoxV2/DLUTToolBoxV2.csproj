@@ -135,9 +135,6 @@
     <Compile Include="Windows\QRPayCodeWindow.xaml.cs">
       <DependentUpon>QRPayCodeWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\SelfService.xaml.cs">
-      <DependentUpon>SelfService.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Windows\SmallPanelWindow.xaml.cs">
       <DependentUpon>SmallPanelWindow.xaml</DependentUpon>
     </Compile>
@@ -171,10 +168,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Windows\QRPayCodeWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\SelfService.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

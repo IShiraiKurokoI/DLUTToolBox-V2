@@ -192,6 +192,7 @@
                         <Button Content="手动连接" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="100" FontSize="30"  Margin="30,0,0,0" x:Name="Network_ManualConnect" Click="Network_ManualConnect_Click"/>
                         <Button Content="注销连接" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="100" FontSize="30"  Margin="20,0,0,0" x:Name="Network_ManualDisconnect" Click="Network_ManualDisconnect_Click"/>
                         <Button Content="网络疏通优化" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="100" FontSize="30"  Margin="20,0,0,0" x:Name="Network_Modify" Click="Network_Modify_Click"/>
+                        <Button Content="网络状态刷新" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="200" Height="100" FontSize="30"  Margin="20,0,0,0" x:Name="Network_StatusRefresh" Click="Network_StatusRefresh_Click" />
                     </DockPanel>
                     <Label Content="校园网信息：" DockPanel.Dock="Top" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="30" Background="Transparent" BorderThickness="0"/>
                     <Label x:Name="NetWork_NetworkInfo" Content="正在加载信息。。。" DockPanel.Dock="Top" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="26" Background="Transparent" BorderThickness="0" Margin="4"/>

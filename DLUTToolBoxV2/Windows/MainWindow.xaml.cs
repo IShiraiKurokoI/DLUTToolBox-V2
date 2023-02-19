@@ -118,6 +118,74 @@ namespace DLUTToolBox_V2
         public bool site_admin { get; set; }
     }
 
+
+    public class DrcomStatus
+    {
+        public int result { get; set; }
+        public int time { get; set; }
+        public long flow { get; set; }
+        public int fsele { get; set; }
+        public int fee { get; set; }
+        public int m46 { get; set; }
+        public string v46ip { get; set; }
+        public string myv6ip { get; set; }
+        public long oltime { get; set; }
+        public long olflow { get; set; }
+        public string lip { get; set; }
+        public string stime { get; set; }
+        public string etime { get; set; }
+        public string uid { get; set; }
+        public int v6af { get; set; }
+        public int v6df { get; set; }
+        public int v46m { get; set; }
+        public string v4ip { get; set; }
+        public string v6ip { get; set; }
+        public string AC { get; set; }
+        public string ss5 { get; set; }
+        public string ss6 { get; set; }
+        public int vid { get; set; }
+        public string ss1 { get; set; }
+        public string ss4 { get; set; }
+        public int cvid { get; set; }
+        public int pvid { get; set; }
+        public int hotel { get; set; }
+        public int aolno { get; set; }
+        public int eport { get; set; }
+        public int eclass { get; set; }
+        public int zxopt { get; set; }
+        public string NID { get; set; }
+        public int olno { get; set; }
+        public string udate { get; set; }
+        public string olmac { get; set; }
+        public int ollm { get; set; }
+        public string olm1 { get; set; }
+        public string olm2 { get; set; }
+        public int olm3 { get; set; }
+        public int olmm { get; set; }
+        public int olm5 { get; set; }
+        public int gid { get; set; }
+        public int ispid { get; set; }
+        public string opip { get; set; }
+        public int actM { get; set; }
+        public int actt { get; set; }
+        public int actdf { get; set; }
+        public int actuf { get; set; }
+        public int act6df { get; set; }
+        public int act6uf { get; set; }
+        public int allfm { get; set; }
+        public int d1 { get; set; }
+        public int u1 { get; set; }
+        public int d2 { get; set; }
+        public int u2 { get; set; }
+        public int o1 { get; set; }
+        public int nd1 { get; set; }
+        public int nu1 { get; set; }
+        public int nd2 { get; set; }
+        public int nu2 { get; set; }
+        public int no1 { get; set; }
+    }
+
+
     public enum PanelSelected
     {
         Overview,
@@ -276,87 +344,75 @@ namespace DLUTToolBox_V2
 
         void loadinfo()
         {
-            Growl.InfoGlobal("加载信息尚未实现");
-            //using (WebClientPro client = new WebClientPro())
-            //{
-            //    try
-            //    {
-            //        string data_all = client.DownloadString("http://172.20.20.1:801/include/auth_action.php?action=get_online_info");
-            //        string[] data = data_all.Split(new[] { "," }, StringSplitOptions.None);
-            //        if (data.Length > 2)
-            //        {
-            //            Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewAddText), "\n校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow_2(data[0]) + "\nIPV4地址:" + data[5] + "\n网卡MAC地址:\n" + data[3]);
-            //            NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkAddText), "\n校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow_2(data[0]) + "\nIPV4地址:" + data[5] + "\n网卡MAC地址:\n" + data[3]);
-            //            netload = true;
-            //            if (Properties.Settings.Default.DoAutoUpdate == true)
-            //            {
-            //                checkforupdate();
-            //            }
-            //            if (ReConnect == true)
-            //            {
-            //                Growl.SuccessGlobal("登陆成功！\n校园网余额:" + data[2] + "\n校园网已用流量:\n" + formatdataflow(data[0]) + "\nIPV4地址:" + data[5] + "\n网卡MAC地址:" + data[3]);
-            //                WeatherBar.Dispatcher.Invoke(new outputDelegate(ReloadWeather), "");
-            //            }
-            //        }
-            //        else
-            //        {
-            //            if (Properties.Settings.Default.DoAutoUpdate == true)
-            //            {
-            //                checkforupdate();
-            //            }
-            //            if(data_all != null)
-            //            {
-            //                Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewAddText), "\n获取数据失败:"+data_all);
-            //                NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkAddText), "\n获取数据失败:"+data_all);
-            //            }
-            //            else
-            //            {
-            //                Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewAddText), "\n获取数据失败");
-            //                NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkAddText), "\n获取数据失败");
-            //            }
-            //        }
-            //        if (datawarn == true)
-            //        {
-            //            Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewAddText), "\n|本月流量使用已超过90G，请留意！！|\n");
-            //            NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkAddText), "\n|本月流量使用已超过90G，请留意！！|\n");
-            //        }
-            //    }
-            //    catch (System.Net.WebException ee)
-            //    {
-            //        Growl.WarningGlobal("无法加载校园网信息，五秒超时已到");
-            //        Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewAddText), "\n获取数据失败");
-            //        NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkAddText), "\n获取数据失败");
-            //        if (Properties.Settings.Default.DoAutoUpdate == true)
-            //        {
-            //            checkforupdate();
-            //        }
-            //    }
-            //}
+            using (WebClientPro client = new WebClientPro())
+            {
+                try
+                {
+                    string result = client.DownloadString("http://172.20.30.1/drcom/chkstatus?callback=");
+                    string data = result.Split(new[] { "(" }, StringSplitOptions.None)[1].Split(new[] { ")" }, StringSplitOptions.None)[0];
+                    DrcomStatus drcomStatus = JsonConvert.DeserializeObject<DrcomStatus>(data);
+                    if (data.IndexOf("\"result\":1,") != -1)
+                    {
+                        double fee = drcomStatus.fee;
+                        fee /= 10000;
+                        string V4IP = drcomStatus.v4ip;
+                        string flowused = formatdataflow_2(drcomStatus.flow);
+                        string infostring = "\n校园网余额：" + fee + "\n校园网已用流量：\n" + flowused + "\nIPV4地址：" + V4IP + "\n网卡MAC：" + drcomStatus.olmac;
+                        if (drcomStatus.flow > 96636764160)
+                        {
+                            infostring +="\n|本月流量使用已超过90G，请留意！！|\n";
+                        }
+                        Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewAddText), infostring);
+                        NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkAddText), infostring);
+                        netload = true;
+                        if (Properties.Settings.Default.DoAutoUpdate == true)
+                        {
+                            checkforupdate();
+                        }
+                    }
+                    else
+                    {
+                        Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewAddText), "\n校园网并未认证");
+                        NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkAddText), "\n校园网并未认证");
+                    }
+                    if(Refresh == true)
+                    {
+                        Refresh = false;
+                        Growl.SuccessGlobal("刷新成功");
+                    }
+                }
+                catch (System.Net.WebException e)
+                {
+                    Growl.WarningGlobal("无法加载校园网信息，五秒超时已到");
+                    Overview_NetworkInfo.Dispatcher.Invoke(new outputDelegate(OverviewAddText), "\n获取数据失败");
+                    NetWork_NetworkInfo.Dispatcher.Invoke(new outputDelegate(NetWorkAddText), "\n获取数据失败");
+                    if (Properties.Settings.Default.DoAutoUpdate == true)
+                    {
+                        checkforupdate();
+                    }
+                }
+            }
         }
-        string formatdataflow_2(string num)
+
+        string formatdataflow_2(long num)
         {
-            double temp = double.Parse(num);
+            double temp = num;
             string re = "";
-            if (temp > (double)96636764160)
-            {
-                datawarn = true;
-            }
-            if (temp > 1000000000)
-            {
-                temp /= (double)(1024 * 1024 * 1024);
-                re = temp.ToString() + "G";
-            }
-            else if (temp > 1000000)
+            if (temp > 1073741824)
             {
                 temp /= (double)(1024 * 1024);
+                re = temp.ToString() + "G";
+            }
+            else if (temp > 1024)
+            {
+                temp /= (double)(1024);
                 re = temp.ToString() + "M";
             }
             else
             {
-                temp /= (double)1024;
-                re = temp.ToString() + "K";
+                re = temp + "KB";
             }
-            return re + "B";
+            return re;
         }
 
         private void SettingsChecker()
@@ -397,7 +453,7 @@ namespace DLUTToolBox_V2
             NamedPipeClientStream PipeSender = new NamedPipeClientStream("localhost", "ToolBoxCorePipe", PipeDirection.Out, PipeOptions.Asynchronous, TokenImpersonationLevel.None);
             StreamWriter sw = null;
             bool started = true;
-            LogHelper.WriteInfoLog("尝试向后台IPC发送信息:"+msg);
+            LogHelper.WriteInfoLog("尝试向后台IPC发送信息:" + msg);
             if (System.Diagnostics.Process.GetProcessesByName("ToolBox.Core").ToList().Count == 0)
             {
                 LogHelper.WriteInfoLog("后台IPC未启动，正在启动 ");
@@ -940,36 +996,36 @@ namespace DLUTToolBox_V2
                 return;
             }
             string[] config_all = configstring.Split(new[] { "/" }, StringSplitOptions.None);
-                    if (config_all[0] == "DLUTToolBoxV2SettingString")
-                    {
-                        try
-                        {
-                            Properties.Settings.Default.Uid = config_all[1];
-                            Properties.Settings.Default.UnionPassword = config_all[2];
-                            Properties.Settings.Default.MailAddress = config_all[4];
-                            Properties.Settings.Default.MailPassword = config_all[5];
-                            Properties.Settings.Default.BackgroundImageUrl = config_all[6];
-                            Properties.Settings.Default.BackGroundStrechMethod = config_all[7];
-                            Properties.Settings.Default.DoAutoLogin = Convert.ToBoolean(config_all[8]);
-                            Properties.Settings.Default.DoAutoThemeFollow = Convert.ToBoolean(config_all[9]);
-                            Properties.Settings.Default.DoAutoUpdate = Convert.ToBoolean(config_all[10]);
-                            Properties.Settings.Default.Save();
-                        }
-                        catch
-                        {
-                            Growl.InfoGlobal("应用失败");
-                            return;
-                        }
-                        SettingsInitializer();
-                        SetBackgroundImage();
-                        Clipboard.Clear();
-                        Growl.SuccessGlobal("应用成功！");
-                    }
-                    else
-                    {
-                        Growl.InfoGlobal("错误的配置串！");
-                        return;
-                    }
+            if (config_all[0] == "DLUTToolBoxV2SettingString")
+            {
+                try
+                {
+                    Properties.Settings.Default.Uid = config_all[1];
+                    Properties.Settings.Default.UnionPassword = config_all[2];
+                    Properties.Settings.Default.MailAddress = config_all[4];
+                    Properties.Settings.Default.MailPassword = config_all[5];
+                    Properties.Settings.Default.BackgroundImageUrl = config_all[6];
+                    Properties.Settings.Default.BackGroundStrechMethod = config_all[7];
+                    Properties.Settings.Default.DoAutoLogin = Convert.ToBoolean(config_all[8]);
+                    Properties.Settings.Default.DoAutoThemeFollow = Convert.ToBoolean(config_all[9]);
+                    Properties.Settings.Default.DoAutoUpdate = Convert.ToBoolean(config_all[10]);
+                    Properties.Settings.Default.Save();
+                }
+                catch
+                {
+                    Growl.InfoGlobal("应用失败");
+                    return;
+                }
+                SettingsInitializer();
+                SetBackgroundImage();
+                Clipboard.Clear();
+                Growl.SuccessGlobal("应用成功！");
+            }
+            else
+            {
+                Growl.InfoGlobal("错误的配置串！");
+                return;
+            }
         }
 
         private void CleanFile_Click(object sender, RoutedEventArgs e)
@@ -1027,16 +1083,11 @@ namespace DLUTToolBox_V2
             checkforupdate();
         }
 
-        bool datawarn = false;
 
         string formatdataflow(string num)
         {
             double temp = double.Parse(num);
             string re = "";
-            if (temp > (double)96636764160)
-            {
-                datawarn = true;
-            }
             if (temp > 1000000000)
             {
                 temp /= (double)(1024 * 1024 * 1024);
@@ -1110,7 +1161,7 @@ namespace DLUTToolBox_V2
                     }
                     else
                     {
-                        if(ManualCheck==true)
+                        if (ManualCheck == true)
                         {
                             Growl.InfoGlobal("当前已经是最新版本！");
                         }
@@ -1165,7 +1216,7 @@ namespace DLUTToolBox_V2
             }
             Growl.InfoGlobal("开始下载新版本\n从Github下载可能较慢，请耐心等待！");
             Console.WriteLine(url);
-            if(HttpDownloadFile(url, System.IO.Path.GetTempPath() + @"\NewVersion.rar"))
+            if (HttpDownloadFile(url, System.IO.Path.GetTempPath() + @"\NewVersion.rar"))
             {
                 Process p = new Process();
                 p.StartInfo.FileName = Environment.CurrentDirectory + @"\ThirdParty\Unrar\UnRAR.exe";
@@ -1309,11 +1360,11 @@ namespace DLUTToolBox_V2
                 ClassTable.Height = 0;
                 TableCirlcle.Visibility = Visibility.Visible;
             }
-            else if(WeatherBar.Source.AbsoluteUri.IndexOf("http://www.weather.com.cn/") != -1)
+            else if (WeatherBar.Source.AbsoluteUri.IndexOf("http://www.weather.com.cn/") != -1)
             {
                 WeatherHandle();
             }
-            else if(WeatherBar.Source.AbsoluteUri.IndexOf("http://172.20.30.2:8080/Self/dashboard;jsessionid=")!=-1)
+            else if (WeatherBar.Source.AbsoluteUri.IndexOf("http://172.20.30.2:8080/Self/dashboard;jsessionid=") != -1)
             {
                 ClassTable.Source = new Uri("https://api.m.dlut.edu.cn/login?client_id=9qXqHnRQuhhViycC&redirect_uri=https%3a%2f%2flightapp.m.dlut.edu.cn%2fcheck%2fcourseschedule&response_type=code");
                 Eleinfo.Source = new Uri("https://api.m.dlut.edu.cn/login?client_id=19b32196decf419a&redirect_uri=https%3A%2F%2Fcard.m.dlut.edu.cn%2Fhomerj%2FopenRjOAuthPage&response_type=code&scope=base_api&state=weishao");
@@ -1652,7 +1703,7 @@ namespace DLUTToolBox_V2
             //        LogHelper.WriteErrLog(ex);
             //    }
             //}
-            
+
         }
 
         private bool PingIp(string strIP)
@@ -1676,6 +1727,24 @@ namespace DLUTToolBox_V2
         {
             SendMessageToCore("23");
             Growl.SuccessGlobal("优化成功！");
+        }
+
+        bool Refresh = false;
+
+        private void Network_StatusRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            if(PingIp("172.20.30.1"))
+            {
+                NetWork_NetworkInfo.Content = "正在加载信息。。。";
+                Overview_NetworkInfo.Content = "正在加载信息。。。";
+                Refresh = true;
+                netstatusload();
+            }
+            else
+            {
+                Growl.InfoGlobal("似乎没有连接至校园网。。。");
+            }
+            
         }
 
         //日常缴费
@@ -2658,7 +2727,7 @@ namespace DLUTToolBox_V2
 
         private void Window_StateChanged(object sender, EventArgs e)
         {
-            if(this.Width - 470>0)
+            if (this.Width - 470 > 0)
             {
                 AddressBox.Width = this.Width - 470;
             }
