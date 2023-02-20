@@ -1710,22 +1710,30 @@ namespace DLUTToolBox_V2
                 if (data.IndexOf("\"result\":1,") != -1)
                 {
                     WebView2 logoutweb = new WebView2();
+                    bool logoutshown = false;
                     logoutweb.CoreWebView2InitializationCompleted += (sender1, args) =>
                     {
                         logoutweb.NavigationCompleted += (sender2, args1) =>
                         {
                             Console.WriteLine(logoutweb.Source.AbsoluteUri.ToString());
-                            if (logoutweb.Source.AbsoluteUri.IndexOf("172.20.30.1")!=-1&& logoutweb.Source.AbsoluteUri.IndexOf("a79.htm")==-1)
+                            logoutweb.ExecuteScriptAsync("user.unbind_mac(\"\", \"\", 1);");
+                            netstatusload();
+                            using (WebClientPro client1 = new WebClientPro())
                             {
-                                logoutweb.ExecuteScriptAsync("user.unbind_mac(\"\", \"\", 1);");
+                                string result1 = client1.DownloadString("http://172.20.30.1/drcom/chkstatus?callback=");
+                                string data1 = result.Split(new[] { "(" }, StringSplitOptions.None)[1].Split(new[] { ")" }, StringSplitOptions.None)[0];
+                                if (data.IndexOf("\"result\":1,") == -1)
+                                {
+                                    logoutweb.CoreWebView2.CookieManager.DeleteAllCookies();
+                                    netstatusload();
+                                    if(!logoutshown)
+                                    {
+                                        Growl.SuccessGlobal("注销成功");
+                                        logoutshown= true;
+                                    }
+                                }
                             }
-                            else if (logoutweb.Source.AbsoluteUri.IndexOf("a79.htm") != -1)
-                            {
-                                logoutweb.ExecuteScriptAsync("user.unbind_mac(\"\", \"\", 1);");
-                                Growl.SuccessGlobal("注销成功");
-                                logoutweb.CoreWebView2.CookieManager.DeleteAllCookies();
-                                netstatusload();
-                            }
+
                         };
                         logoutweb.Source = new Uri("http://172.20.30.1/");
                     };

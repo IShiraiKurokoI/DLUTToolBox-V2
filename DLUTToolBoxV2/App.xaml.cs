@@ -27,7 +27,6 @@ namespace DLUTToolBox_V2
             RegisterEvents();
             LogHelper.WriteInfoLog("----------------------------------程序启动，开始初始化----------------------------------");
             LogHelper.WriteInfoLog("日志初始化成功！");
-            DeleteFile(System.Environment.CurrentDirectory + @"\\Log\\", 3);
             base.OnStartup(e);
             // 接收参数数组
             var args = e.Args;
@@ -57,6 +56,7 @@ namespace DLUTToolBox_V2
                 LogHelper.WriteInfoLog("初始化WebView参数");
                 Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--proxy-server=\"direct://\"");
                 LogHelper.WriteInfoLog("程序初始化完成，打开主窗口");
+                DeleteFile(System.Environment.CurrentDirectory + @"\Log\", 3);
                 new MainWindow().Show();
             }
         }
