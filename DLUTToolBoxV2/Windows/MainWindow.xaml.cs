@@ -398,15 +398,15 @@ namespace DLUTToolBox_V2
         {
             double temp = num;
             string re = "";
-            if (temp > 1073741824)
+            if (temp > 1048576)
             {
                 temp /= (double)(1024 * 1024);
-                re = temp.ToString() + "G";
+                re = temp.ToString() + "GB";
             }
             else if (temp > 1024)
             {
                 temp /= (double)(1024);
-                re = temp.ToString() + "M";
+                re = temp.ToString() + "MB";
             }
             else
             {
