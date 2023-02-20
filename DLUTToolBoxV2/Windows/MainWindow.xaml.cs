@@ -357,7 +357,7 @@ namespace DLUTToolBox_V2
                         fee /= 10000;
                         string V4IP = drcomStatus.v4ip;
                         string flowused = formatdataflow_2(drcomStatus.flow);
-                        string infostring = "\n校园网余额：" + fee + "\n校园网已用流量：\n" + flowused + "\nIPV4地址：" + V4IP + "\n网卡MAC：" + drcomStatus.olmac;
+                        string infostring = "\n校园网余额：" + fee + "\n本机校园网已用流量：\n" + flowused + "\nIPV4地址：" + V4IP + "\n网卡MAC：" + drcomStatus.olmac;
                         if (drcomStatus.flow > 96636764160)
                         {
                             infostring +="\n|本月流量使用已超过90G，请留意！！|\n";
