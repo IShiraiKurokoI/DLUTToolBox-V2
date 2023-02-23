@@ -430,46 +430,6 @@ namespace DLUTToolBox_V2
                         }
                         break;
                     }
-                case 11:
-                    {
-                        switch (count)
-                        {
-                            case 0:
-                                {
-                                    if (Web.Source.AbsoluteUri == "https://webvpn.dlut.edu.cn/login")
-                                    {
-                                        string jsjump = "window.location.href='/login?cas_login=true'";
-                                        Web.CoreWebView2.ExecuteScriptAsync(jsjump);
-                                        webvpn = true;
-                                    }
-                                    else
-                                    {
-                                        Browser_Background.Content = "";
-                                        LoadingCircle.Visibility = Visibility.Hidden;
-                                        Web.Visibility = Visibility.Visible;
-                                        Web.CoreWebView2.ExecuteScriptAsync("alert('账户dllgdx密码wfdllgdx')");
-                                        Browser_Background.Content = "";
-                                        LoadingCircle.Visibility = Visibility.Hidden;
-                                        Web.Visibility = Visibility.Visible;
-                                    }
-                                    break;
-                                }
-                            case 1:
-                                {
-                                    Browser_Background.Content = "";
-                                    LoadingCircle.Visibility = Visibility.Hidden;
-                                    Web.Visibility = Visibility.Visible;
-                                    if (webvpn == true)
-                                    {
-                                        Web.CoreWebView2.ExecuteScriptAsync("alert('账户dllgdx密码wfdllgdx')");
-                                    }
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-                        break;
-                    }
                 case 18:
                     {
                         switch (count)
@@ -499,6 +459,7 @@ namespace DLUTToolBox_V2
                         }
                         break;
                     }
+                case 11:
                 case 10:
                 case 12:
                 case 13:

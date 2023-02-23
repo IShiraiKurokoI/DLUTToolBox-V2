@@ -2075,7 +2075,7 @@ namespace DLUTToolBox_V2
         private void Library_WanFang_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            new BrowserWindow("https://webvpn.dlut.edu.cn/https/77726476706e69737468656265737421f3ff449f2c7e7f51700e88a29f5122218bc962a70c9d1272/checklogin/?service=https%3A%2F%2Fcheck.wanfangdata.com.cn%2Fmd&filter=app&from=rj", "", "", 0, 11, "万方查重").ShowDialog();
+            new BrowserWindow("https://webvpn.dlut.edu.cn/http/77726476706e69737468656265737421a1af13d27e6226022e5dc7fecc01/dljc/?filter=app&from=rj", "", "", 0, 11, "万方查重").ShowDialog();
             this.Show();
         }
 
